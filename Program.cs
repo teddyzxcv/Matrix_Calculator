@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
@@ -23,6 +23,14 @@ namespace Matrix_Calculator
         static bool TraceM()
         {
             return false;
+        }
+        public static string[] AddElementToArray(string[] array, string Addthing)
+        {
+            /// Add element of array from the certain index.
+            /// Resources https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.removeat?view=netcore-3.1;
+            List<string> lst = new List<string>(array);
+            lst.Add(Addthing);
+            return lst.ToArray();
         }
         static List<string> MainMenu()
         {
@@ -92,13 +100,25 @@ namespace Matrix_Calculator
         static void InputMatrix()
         {
             Console.WriteLine("Plz, input correct matrix(ces)");
+            string[] ConsoleInput = new string[1];
+            string InputLine = "";
+            ConsoleInput[0] = Console.ReadLine();
+            do
+            {
+                InputLine = Console.ReadLine();
+                if (InputLine == "exit")
+                    break;
+                ConsoleInput = AddElementToArray(ConsoleInput, InputLine);
+            } while (true);
+
+            ReadMatrix(ConsoleInput);
             MenuInfo = new List<string>();
         }
-        static void ReadOneMatrix()
+        static void ReadOneMatrix(string[] FileInput)
         {
             int n = 0;
             int m = 0;
-            string[] FileInput = File.ReadAllLines(FilePath);
+
 
             if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 2)
             {
@@ -120,135 +140,143 @@ namespace Matrix_Calculator
                 }
             }
         }
+        static void ReadTwoMatrix(string[] FileInput)
+        {
+            int n1 = 0;
+            int n2 = 0;
+            int m1 = 0;
+            int m2 = 0;
+            if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 3)
+            {
+                string[] SizeOfMatrix = FileInput[0].Split(' ');
+                string st1 = SizeOfMatrix[0].Split('*')[0];
+                string st2 = SizeOfMatrix[0].Split('*')[1];
+                string st3 = SizeOfMatrix[1].Split('*')[0];
+                string st4 = SizeOfMatrix[1].Split('*')[1];
+                if (!(int.TryParse(st1, out n1) & int.TryParse(st2, out m1) & int.TryParse(st3, out n2) & int.TryParse(st4, out m2)))
+                    throw new Exception();
+            }
+            else
+                throw new Exception();
 
+            MatrixA = new double[n1, m1];
+            MatrixB = new double[n2, m2];
+            int DivPos = 0;
+            for (int i = 0; i < FileInput.Length; i++)
+            {
+                if (FileInput[i] == "-")
+                {
+                    DivPos = i;
+                    break;
+                }
+                else if (i == FileInput.Length - 1)
+                {
+                    throw new Exception();
+                }
+            }
+            if (DivPos != FileInput.Length - 2 - n1)
+                throw new Exception();
+            for (int i = 1; i < DivPos; i++)
+            {
+                string[] FileLine = FileInput[i].Split(' ');
+                if (FileLine.Length != m1)
+                    throw new Exception();
+                for (int j = 0; j < FileLine.Length; j++)
+                {
+                    MatrixA[i - 1, j] = double.Parse(FileLine[j]);
+                }
+            }
+
+            for (int i = DivPos + 1; i < FileInput.Length; i++)
+            {
+                string[] FileLine = FileInput[i].Split(' ');
+                if (FileLine.Length != m2)
+                    throw new Exception();
+                for (int j = 0; j < FileLine.Length; j++)
+                {
+                    MatrixB[i - 1 - DivPos, j] = double.Parse(FileLine[j]);
+                }
+            }
+        }
+
+        static void ReadOneAndPrMatrix(string[] FileInput)
+        {
+            int n = 0;
+            int m = 0;
+
+            if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 2)
+            {
+                string[] SizeOfMatrix = FileInput[0].Split('*');
+                if (!(int.TryParse(SizeOfMatrix[0], out n) & int.TryParse(SizeOfMatrix[1], out m) & FileInput.Length == n + 2))
+                    throw new Exception();
+
+            }
+            else
+                throw new Exception();
+            ProductToMake = double.Parse(FileInput[1]);
+            MatrixA = new double[n, m];
+            for (int i = 2; i < n + 2; i++)
+            {
+                string[] FileLine = FileInput[i].Split(' ');
+                if (FileLine.Length != m)
+                    throw new Exception();
+                for (int j = 0; j < FileLine.Length; j++)
+                {
+                    MatrixA[i - 2, j] = double.Parse(FileLine[j]);
+                }
+            }
+            PrintMatrix(MatrixA);
+            Console.WriteLine(ProductToMake);
+
+        }
         static void ReadMatrix(string[] Input)
         {
             try
             {
-
                 if (ChoosenOperation == 1 || ChoosenOperation == 0 || ChoosenOperation == 6)
                 {
-
-                    int n = 0;
-                    int m = 0;
-                    string[] FileInput = File.ReadAllLines(FilePath);
-
-                    if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 2)
-                    {
-                        string[] SizeOfMatrix = FileInput[0].Split('*');
-                        if (!(int.TryParse(SizeOfMatrix[0], out n) & int.TryParse(SizeOfMatrix[1], out m) & FileInput.Length == n + 1))
-                            throw new Exception();
-                    }
-                    else
-                        throw new Exception();
-                    MatrixA = new double[n, m];
-                    for (int i = 1; i < n + 1; i++)
-                    {
-                        string[] FileLine = FileInput[i].Split(' ');
-                        if (FileLine.Length != m)
-                            throw new Exception();
-                        for (int j = 0; j < FileLine.Length; j++)
-                        {
-                            MatrixA[i - 1, j] = double.Parse(FileLine[j]);
-                        }
-                    }
+                    ReadOneMatrix(Input);
                     return;
                 }
                 else if (ChoosenOperation == 2 || ChoosenOperation == 3 || ChoosenOperation == 4)
                 {
-                    int n1 = 0;
-                    int n2 = 0;
-                    int m1 = 0;
-                    int m2 = 0;
-                    string[] FileInput = File.ReadAllLines(FilePath);
-                    if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 3)
-                    {
-                        string[] SizeOfMatrix = FileInput[0].Split(' ');
-                        string st1 = SizeOfMatrix[0].Split('*')[0];
-                        string st2 = SizeOfMatrix[0].Split('*')[1];
-                        string st3 = SizeOfMatrix[1].Split('*')[0];
-                        string st4 = SizeOfMatrix[1].Split('*')[1];
-                        if (!(int.TryParse(st1, out n1) & int.TryParse(st2, out m1) & int.TryParse(st3, out n2) & int.TryParse(st4, out m2)))
-                            throw new Exception();
-                    }
-                    else
-                        throw new Exception();
-
-                    MatrixA = new double[n1, m1];
-                    MatrixB = new double[n2, m2];
-                    int DivPos = 0;
-                    for (int i = 0; i < FileInput.Length; i++)
-                    {
-                        if (FileInput[i] == "-")
-                        {
-                            DivPos = i;
-                            break;
-                        }
-                        else if (i == FileInput.Length - 1)
-                        {
-                            throw new Exception();
-                        }
-                    }
-                    if (DivPos != FileInput.Length - 2 - n1)
-                        throw new Exception();
-                    for (int i = 1; i < DivPos; i++)
-                    {
-                        string[] FileLine = FileInput[i].Split(' ');
-                        if (FileLine.Length != m1)
-                            throw new Exception();
-                        for (int j = 0; j < FileLine.Length; j++)
-                        {
-                            MatrixA[i - 1, j] = double.Parse(FileLine[j]);
-                        }
-                    }
-
-                    for (int i = DivPos + 1; i < FileInput.Length; i++)
-                    {
-                        string[] FileLine = FileInput[i].Split(' ');
-                        if (FileLine.Length != m2)
-                            throw new Exception();
-                        for (int j = 0; j < FileLine.Length; j++)
-                        {
-                            MatrixB[i - 1 - DivPos, j] = double.Parse(FileLine[j]);
-                        }
-                    }
-
+                    ReadTwoMatrix(Input);
+                    return;
+                }
+                else if (ChoosenOperation == 5)
+                {
+                    ReadOneAndPrMatrix(Input);
+                    return;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Incorrect input in the file!");
+            }
+        }
+        static void RandomMatrix()
+        {
+            string[] RandomInput = new string[1];
+            try
+            {
+                if (ChoosenOperation == 1 || ChoosenOperation == 0 || ChoosenOperation == 6)
+                {
+                    Console.WriteLine("Plz, input correct size of matrix (n*m)");
+                    RandomInput[0] = Console.ReadLine();
+                    return;
+                }
+                else if (ChoosenOperation == 2 || ChoosenOperation == 3 || ChoosenOperation == 4)
+                {
+                    Console.WriteLine("Plz, input correct size of first matrix (n*m)");
+                    RandomInput[0] = Console.ReadLine();
+                    Console.WriteLine("Plz, input correct size of second matrix (n*m)");
+                    RandomInput = AddElementToArray(RandomInput, Console.ReadLine());
                     return;
                 }
                 else if (ChoosenOperation == 5)
                 {
 
-                    int n = 0;
-                    int m = 0;
-                    string[] FileInput = File.ReadAllLines(FilePath);
-
-                    if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 2)
-                    {
-                        string[] SizeOfMatrix = FileInput[0].Split('*');
-                        if (!(int.TryParse(SizeOfMatrix[0], out n) & int.TryParse(SizeOfMatrix[1], out m) & FileInput.Length == n + 2))
-                            throw new Exception();
-
-                    }
-                    else
-                        throw new Exception();
-                    ProductToMake = double.Parse(FileInput[1]);
-
-
-                    MatrixA = new double[n, m];
-                    for (int i = 2; i < n + 2; i++)
-                    {
-                        string[] FileLine = FileInput[i].Split(' ');
-                        if (FileLine.Length != m)
-                            throw new Exception();
-                        for (int j = 0; j < FileLine.Length; j++)
-                        {
-                            MatrixA[i - 2, j] = double.Parse(FileLine[j]);
-                        }
-                    }
-                    PrintMatrix(MatrixA);
-                    Console.WriteLine(ProductToMake);
                     return;
-
                 }
             }
             catch
@@ -256,16 +284,28 @@ namespace Matrix_Calculator
                 Console.WriteLine("Incorrect input in the file!");
             }
 
-
-        }
-        static void RandomMatrix()
-        {
-            Console.WriteLine("Plz, input correct size of matrix");
             MenuInfo = new List<string>();
         }
         static bool CheckMatrix()
         {
-            return false;
+            try
+            {
+                if (ChoosenOperation == 2 || ChoosenOperation == 3)
+                {
+                    if (MatrixA.GetLength(0) != MatrixB.GetLength(0) || MatrixA.GetLength(1) != MatrixB.GetLength(1))
+                        throw new Exception();
+                }
+                else if (ChoosenOperation == 4)
+                {
+                    if (MatrixA.GetLength(1) != MatrixB.GetLength(0))
+                        throw new Exception();
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
         static short PositionClear(short Position)
         {
