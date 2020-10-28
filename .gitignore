@@ -1,6 +1,6 @@
 Matrix_Calculator.csproj
-obj/
-bin/
+obj/**
+bin/**
 bin/Debug/netcoreapp3.1/Matrix_Calculator.dll
 bin/Debug/netcoreapp3.1/Matrix_Calculator.dll
 *.pdb
@@ -11,6 +11,3 @@ obj/Debug/netcoreapp3.1/Matrix_Calculator.dll
 obj/Debug/netcoreapp3.1/Matrix_Calculator.pdb
 *.pdb
 *.dll
-
-obj/Debug/netcoreapp3.1/Matrix_Calculator.assets.cache
-obj/Debug/netcoreapp3.1/Matrix_Calculator.csprojAssemblyReference.cache
