@@ -9,3 +9,6 @@ bin/Debug/netcoreapp3.1/Matrix_Calculator.dll
 bin/Debug/netcoreapp3.1/Matrix_Calculator.pdb
 obj/Debug/netcoreapp3.1/Matrix_Calculator.dll
 obj/Debug/netcoreapp3.1/Matrix_Calculator.pdb
+*.pdb
+*.dll
+
