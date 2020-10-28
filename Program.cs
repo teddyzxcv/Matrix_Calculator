@@ -129,7 +129,7 @@ namespace Matrix_Calculator
                 }
                 else if (ChoosenOperation == 2 || ChoosenOperation == 3 || ChoosenOperation == 4)
                 {
-                    Console.WriteLine(28348324);
+
 
 
                     int n1 = 0;
@@ -145,13 +145,14 @@ namespace Matrix_Calculator
                         string st2 = SizeOfMatrix[0].Split('*')[1];
                         string st3 = SizeOfMatrix[1].Split('*')[0];
                         string st4 = SizeOfMatrix[1].Split('*')[1];
-                        if (!(int.TryParse(st1, out n1) & int.TryParse(st2, out m1) & int.TryParse(st1, out n2) & int.TryParse(st2, out m2)))
+                        if (!(int.TryParse(st1, out n1) & int.TryParse(st2, out m1) & int.TryParse(st3, out n2) & int.TryParse(st4, out m2)))
                             throw new Exception();
                     }
                     else
                         throw new Exception();
+
                     MatrixA = new int[n1, m1];
-                    MatrixB = new int[n1, m1];
+                    MatrixB = new int[n2, m2];
                     int DivPos = 0;
                     for (int i = 0; i < FileInput.Length; i++)
                     {
@@ -177,6 +178,7 @@ namespace Matrix_Calculator
                             MatrixA[i - 1, j] = int.Parse(FileLine[j]);
                         }
                     }
+
                     for (int i = DivPos + 1; i < FileInput.Length; i++)
                     {
                         string[] FileLine = FileInput[i].Split(' ');
@@ -184,12 +186,9 @@ namespace Matrix_Calculator
                             throw new Exception();
                         for (int j = 0; j < FileLine.Length; j++)
                         {
-                            MatrixB[i - 1, j] = int.Parse(FileLine[j]);
+                            MatrixB[i - 1 - DivPos, j] = int.Parse(FileLine[j]);
                         }
                     }
-
-
-
                     PrintMatrix(MatrixA);
                     PrintMatrix(MatrixB);
                     return;
