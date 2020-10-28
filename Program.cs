@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Text;
+using System.IO;
 using System.Collections.Generic;
 
 namespace Matrix_Calculator
 {
     class Program
     {
+
         static int ChoosenOne = 0;
         static short MenuPosition = 0;
         static int ChoosenOperation = 0;
         static string MenuName = "";
         static List<string> MenuInfo = new List<string>();
+        static int[][] MatrixA = new int[1][];
+        static int[][] MatrixB = new int[1][];
+        static string FilePath = "";
+
         static bool TraceM()
         {
             return false;
@@ -24,7 +30,7 @@ namespace Matrix_Calculator
             MainMenuInfo.Add("Find sum of two matrices.");
             MainMenuInfo.Add("Find difference of two matrices.");
             MainMenuInfo.Add("Find product of the two matrices.");
-            MainMenuInfo.Add("Find product of the matrix on number. ");
+            MainMenuInfo.Add("Find product of the matrix on number.");
             MainMenuInfo.Add("Find determinant of the matrix.");
             return MainMenuInfo;
         }
@@ -54,15 +60,94 @@ namespace Matrix_Calculator
                     break;
             }
         }
+        // Size of matrix;
         static void InputPath()
         {
             Console.WriteLine("Plz, input correct path to your file with matrix(ces)");
+            FilePath = Console.ReadLine();
+            try
+            {
+                if (File.Exists(FilePath))
+                {
+                    ReadMatrix(File.ReadAllLines(FilePath));
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Incorrect Input path!");
+            }
+
             MenuInfo = new List<string>();
         }
         static void InputMatrix()
         {
             Console.WriteLine("Plz, input correct matrix(ces)");
             MenuInfo = new List<string>();
+        }
+
+        static void ReadMatrix(string[] Input)
+        {
+            try
+            {
+                int n = 0;
+                int m = 0;
+                if (ChoosenOne == 1 || ChoosenOne == 0 || ChoosenOne == 6)
+                {
+                    string[] FileInput = File.ReadAllLines(FilePath);
+
+                    if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 2)
+                    {
+                        string[] SizeOfMatrix = FileInput[0].Split('*');
+                        if (!(int.TryParse(SizeOfMatrix[0], out n) & int.TryParse(SizeOfMatrix[1], out m) & FileInput.Length == n + 1))
+                        {
+                            throw new Exception();
+
+                        }
+
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                    MatrixA = new int[n][];
+                    MatrixA[n] = new int[m];
+                    for (int i = 1; i < n + 1; i++)
+                    {
+                        string[] FileLine = FileInput[i].Split(' ');
+                        for (int j = 0; j < FileLine.Length; j++)
+                        {
+                            MatrixA[i - 1][j] = int.Parse(FileLine[j]);
+
+                        }
+                        if (MatrixA[i - 1].Length != m)
+                        {
+                            throw new Exception();
+                        }
+
+
+                    }
+                    PrintMatrix(MatrixA);
+                    return;
+                }
+                else if (ChoosenOne == 2 || ChoosenOne == 3 || ChoosenOne == 4)
+                {
+
+                }
+                else if (ChoosenOne == 5)
+                {
+
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Incorrect input in the file!");
+            }
+
+
         }
         static void RandomMatrix()
         {
@@ -80,6 +165,17 @@ namespace Matrix_Calculator
             if (Position >= 2)
                 return 2;
             return Position;
+        }
+        static void PrintMatrix(int[][] A)
+        {
+            for (int i = 0; i < A.Length; i++)
+            {
+                for (int j = 0; j < A[i].Length; j++)
+                {
+                    Console.Write(A[i][j] + " ");
+                }
+                Console.WriteLine();
+            }
         }
 
 
@@ -128,6 +224,7 @@ namespace Matrix_Calculator
                 }
 
                 PrintOutUpAndDown(MenuInfo, ChoosenOne);
+
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
                 // Simple switch, if uparrow then decrease, downarrow then increase.
@@ -161,6 +258,7 @@ namespace Matrix_Calculator
                         ChoosenOne = 0;
                         break;
                 }
+
             } while (true);
         }
     }
