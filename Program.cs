@@ -148,10 +148,13 @@ namespace Matrix_Calculator
                             ChoosenOne++;
                         break;
                     case (ConsoleKey.RightArrow):
-                        MenuPosition += 1;
-                        MenuName = MenuInfo[ChoosenOne];
-                        ChoosenOperation = ChoosenOne;
-                        ChoosenOne = 0;
+                        if (MenuPosition < 2)
+                        {
+                            MenuPosition += 1;
+                            MenuName = MenuInfo[ChoosenOne];
+                            ChoosenOperation = ChoosenOne;
+                            ChoosenOne = 0;
+                        }
                         break;
                     case (ConsoleKey.LeftArrow):
                         MenuPosition -= 1;
