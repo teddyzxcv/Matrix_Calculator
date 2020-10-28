@@ -8,6 +8,7 @@ namespace Matrix_Calculator
     class Program
     {
 
+        static double ProductToMake = 0;
         static int ChoosenOne = 0;
         static short MenuPosition = 0;
         static int ChoosenOperation = 0;
@@ -15,8 +16,8 @@ namespace Matrix_Calculator
         static int ChoosenMethodInput = 0;
         static string MenuName = "";
         static List<string> MenuInfo = new List<string>();
-        static int[,] MatrixA = new int[1, 1];
-        static int[,] MatrixB = new int[1, 1];
+        static double[,] MatrixA = new double[1, 1];
+        static double[,] MatrixB = new double[1, 1];
         static string FilePath = "";
 
         static bool TraceM()
@@ -93,6 +94,32 @@ namespace Matrix_Calculator
             Console.WriteLine("Plz, input correct matrix(ces)");
             MenuInfo = new List<string>();
         }
+        static void ReadOneMatrix()
+        {
+            int n = 0;
+            int m = 0;
+            string[] FileInput = File.ReadAllLines(FilePath);
+
+            if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 2)
+            {
+                string[] SizeOfMatrix = FileInput[0].Split('*');
+                if (!(int.TryParse(SizeOfMatrix[0], out n) & int.TryParse(SizeOfMatrix[1], out m) & FileInput.Length == n + 1))
+                    throw new Exception();
+            }
+            else
+                throw new Exception();
+            MatrixA = new double[n, m];
+            for (int i = 1; i < n + 1; i++)
+            {
+                string[] FileLine = FileInput[i].Split(' ');
+                if (FileLine.Length != m)
+                    throw new Exception();
+                for (int j = 0; j < FileLine.Length; j++)
+                {
+                    MatrixA[i - 1, j] = double.Parse(FileLine[j]);
+                }
+            }
+        }
 
         static void ReadMatrix(string[] Input)
         {
@@ -114,7 +141,7 @@ namespace Matrix_Calculator
                     }
                     else
                         throw new Exception();
-                    MatrixA = new int[n, m];
+                    MatrixA = new double[n, m];
                     for (int i = 1; i < n + 1; i++)
                     {
                         string[] FileLine = FileInput[i].Split(' ');
@@ -122,22 +149,18 @@ namespace Matrix_Calculator
                             throw new Exception();
                         for (int j = 0; j < FileLine.Length; j++)
                         {
-                            MatrixA[i - 1, j] = int.Parse(FileLine[j]);
+                            MatrixA[i - 1, j] = double.Parse(FileLine[j]);
                         }
                     }
                     return;
                 }
                 else if (ChoosenOperation == 2 || ChoosenOperation == 3 || ChoosenOperation == 4)
                 {
-
-
-
                     int n1 = 0;
                     int n2 = 0;
                     int m1 = 0;
                     int m2 = 0;
                     string[] FileInput = File.ReadAllLines(FilePath);
-
                     if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 3)
                     {
                         string[] SizeOfMatrix = FileInput[0].Split(' ');
@@ -151,8 +174,8 @@ namespace Matrix_Calculator
                     else
                         throw new Exception();
 
-                    MatrixA = new int[n1, m1];
-                    MatrixB = new int[n2, m2];
+                    MatrixA = new double[n1, m1];
+                    MatrixB = new double[n2, m2];
                     int DivPos = 0;
                     for (int i = 0; i < FileInput.Length; i++)
                     {
@@ -175,7 +198,7 @@ namespace Matrix_Calculator
                             throw new Exception();
                         for (int j = 0; j < FileLine.Length; j++)
                         {
-                            MatrixA[i - 1, j] = int.Parse(FileLine[j]);
+                            MatrixA[i - 1, j] = double.Parse(FileLine[j]);
                         }
                     }
 
@@ -186,15 +209,45 @@ namespace Matrix_Calculator
                             throw new Exception();
                         for (int j = 0; j < FileLine.Length; j++)
                         {
-                            MatrixB[i - 1 - DivPos, j] = int.Parse(FileLine[j]);
+                            MatrixB[i - 1 - DivPos, j] = double.Parse(FileLine[j]);
                         }
                     }
-                    PrintMatrix(MatrixA);
-                    PrintMatrix(MatrixB);
+
                     return;
                 }
                 else if (ChoosenOperation == 5)
                 {
+
+                    int n = 0;
+                    int m = 0;
+                    string[] FileInput = File.ReadAllLines(FilePath);
+
+                    if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 2)
+                    {
+                        string[] SizeOfMatrix = FileInput[0].Split('*');
+                        if (!(int.TryParse(SizeOfMatrix[0], out n) & int.TryParse(SizeOfMatrix[1], out m) & FileInput.Length == n + 2))
+                            throw new Exception();
+
+                    }
+                    else
+                        throw new Exception();
+                    ProductToMake = double.Parse(FileInput[1]);
+
+
+                    MatrixA = new double[n, m];
+                    for (int i = 2; i < n + 2; i++)
+                    {
+                        string[] FileLine = FileInput[i].Split(' ');
+                        if (FileLine.Length != m)
+                            throw new Exception();
+                        for (int j = 0; j < FileLine.Length; j++)
+                        {
+                            MatrixA[i - 2, j] = double.Parse(FileLine[j]);
+                        }
+                    }
+                    PrintMatrix(MatrixA);
+                    Console.WriteLine(ProductToMake);
+                    return;
 
                 }
             }
@@ -222,7 +275,7 @@ namespace Matrix_Calculator
                 return 2;
             return Position;
         }
-        static void PrintMatrix(int[,] A)
+        static void PrintMatrix(double[,] A)
         {
             for (int i = 0; i < A.GetLength(0); i++)
             {
