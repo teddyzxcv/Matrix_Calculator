@@ -11,13 +11,27 @@ namespace Matrix_Calculator
         {
             return false;
         }
-        static void MainMenu()
+        static List<string> MainMenu()
         {
+            List<string> MainMenuInfo = new List<string>();
 
+            MainMenuInfo.Add("Find trace matrix.");
+            MainMenuInfo.Add("Find transpose matrix.");
+            MainMenuInfo.Add("Find sum of two matrices.");
+            MainMenuInfo.Add("Find difference of two matrices.");
+            MainMenuInfo.Add("Find product of the two matrices.");
+            MainMenuInfo.Add("Find product of the matrix on number. ");
+            MainMenuInfo.Add("Find determinant of the matrix.");
+            return MainMenuInfo;
         }
-        static void MethodMenu()
+        static List<string> MethodMenu()
         {
+            List<string> MethodMenuInfo = new List<string>();
 
+            MethodMenuInfo.Add("Use text file");
+            MethodMenuInfo.Add("Use console input");
+            MethodMenuInfo.Add("Randomize");
+            return MethodMenuInfo;
         }
         static void InputPath()
         {
@@ -30,6 +44,14 @@ namespace Matrix_Calculator
         static bool CheckMatrix()
         {
             return false;
+        }
+        static short PositionClear(short Position)
+        {
+            if (Position < 0)
+                return 0;
+            if (Position > 3)
+                return 0;
+            return Position;
         }
 
 
@@ -57,15 +79,11 @@ namespace Matrix_Calculator
         {
             int ChoosenOne = 0;
             short MenuPosition = 0;
+            int ChoosenOperation = 0;
+            string MenuName = "";
             List<string> MenuInfo = new List<string>();
-            List<string> MainMenuInfo = new List<string>();
-            MainMenuInfo.Add("Find trace matrix.");
-            MainMenuInfo.Add("Find transpose matrix.");
-            MainMenuInfo.Add("Find sum of two matrices.");
-            MainMenuInfo.Add("Find difference of two matrices.");
-            MainMenuInfo.Add("Find product of the two matrices.");
-            MainMenuInfo.Add("Find product of the matrix on number. ");
-            MainMenuInfo.Add("Find determinant of the matrix.");
+
+
 
             /* 1. нахождение следа матрицы;  KV
             2. транспонирование матрицы; every
@@ -77,11 +95,21 @@ namespace Matrix_Calculator
 
             do
             {
+                MenuPosition = PositionClear(MenuPosition);
+                Console.Clear();
                 if (MenuPosition == 0)
                 {
-                    MenuInfo = MainMenuInfo;
+                    Console.WriteLine("Main Menu");
+
+                    MenuInfo = MainMenu();
+
                 }
-                Console.Clear();
+                if (MenuPosition == 1)
+                {
+                    Console.WriteLine(MenuName);
+                    MenuInfo = MethodMenu();
+                }
+
                 PrintOutUpAndDown(MenuInfo, ChoosenOne);
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
@@ -101,6 +129,16 @@ namespace Matrix_Calculator
                             ChoosenOne = 0;
                         else
                             ChoosenOne++;
+                        break;
+                    case (ConsoleKey.RightArrow):
+                        MenuPosition += 1;
+                        MenuName = MenuInfo[ChoosenOne];
+                        ChoosenOperation = ChoosenOne;
+                        ChoosenOne = 0;
+                        break;
+                    case (ConsoleKey.LeftArrow):
+                        MenuPosition -= 1;
+                        ChoosenOne = 0;
                         break;
                 }
             } while (true);
