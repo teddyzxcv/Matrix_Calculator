@@ -1,0 +1,13 @@
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\bin\Debug\netcoreapp3.1\Matrix_Calculator.exe
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\bin\Debug\netcoreapp3.1\Matrix_Calculator.deps.json
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\bin\Debug\netcoreapp3.1\Matrix_Calculator.runtimeconfig.json
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\bin\Debug\netcoreapp3.1\Matrix_Calculator.runtimeconfig.dev.json
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\bin\Debug\netcoreapp3.1\Matrix_Calculator.dll
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\bin\Debug\netcoreapp3.1\Matrix_Calculator.pdb
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\obj\Debug\netcoreapp3.1\Matrix_Calculator.csprojAssemblyReference.cache
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\obj\Debug\netcoreapp3.1\Matrix_Calculator.AssemblyInfoInputs.cache
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\obj\Debug\netcoreapp3.1\Matrix_Calculator.AssemblyInfo.cs
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\obj\Debug\netcoreapp3.1\Matrix_Calculator.csproj.CoreCompileInputs.cache
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\obj\Debug\netcoreapp3.1\Matrix_Calculator.dll
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\obj\Debug\netcoreapp3.1\Matrix_Calculator.pdb
+C:\Users\teddyzxcv\Documents\GitHub\Matrix_Calculator\obj\Debug\netcoreapp3.1\Matrix_Calculator.genruntimeconfig.cache
