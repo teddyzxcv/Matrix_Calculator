@@ -6,7 +6,11 @@ namespace Matrix_Calculator
 {
     class Program
     {
-
+        static int ChoosenOne = 0;
+        static short MenuPosition = 0;
+        static int ChoosenOperation = 0;
+        static string MenuName = "";
+        static List<string> MenuInfo = new List<string>();
         static bool TraceM()
         {
             return false;
@@ -33,13 +37,37 @@ namespace Matrix_Calculator
             MethodMenuInfo.Add("Randomize");
             return MethodMenuInfo;
         }
+        static void InputMethod(int ChoosenOperation)
+        {
+            switch (ChoosenOperation)
+            {
+                case (0):
+                    InputPath();
+                    break;
+                case (1):
+                    InputMatrix();
+                    break;
+                case (2):
+                    RandomMatrix();
+                    break;
+                default:
+                    break;
+            }
+        }
         static void InputPath()
         {
-
+            Console.WriteLine("Plz, input correct path to your file with matrix(ces)");
+            MenuInfo = new List<string>();
         }
         static void InputMatrix()
         {
-
+            Console.WriteLine("Plz, input correct matrix(ces)");
+            MenuInfo = new List<string>();
+        }
+        static void RandomMatrix()
+        {
+            Console.WriteLine("Plz, input correct size of matrix");
+            MenuInfo = new List<string>();
         }
         static bool CheckMatrix()
         {
@@ -49,8 +77,8 @@ namespace Matrix_Calculator
         {
             if (Position < 0)
                 return 0;
-            if (Position > 3)
-                return 0;
+            if (Position >= 2)
+                return 2;
             return Position;
         }
 
@@ -77,21 +105,6 @@ namespace Matrix_Calculator
         }
         static void Main(string[] args)
         {
-            int ChoosenOne = 0;
-            short MenuPosition = 0;
-            int ChoosenOperation = 0;
-            string MenuName = "";
-            List<string> MenuInfo = new List<string>();
-
-
-
-            /* 1. нахождение следа матрицы;  KV
-            2. транспонирование матрицы; every
-            3. сумма двух матриц; Same
-            4. разность двух матриц; Same
-            5. произведение двух матриц; n*k k*p
-            6. умножение матрицы на число; every
-            7. нахождение определителя матрицы.n*n*/
 
             do
             {
@@ -108,6 +121,10 @@ namespace Matrix_Calculator
                 {
                     Console.WriteLine(MenuName);
                     MenuInfo = MethodMenu();
+                }
+                if (MenuPosition == 2)
+                {
+                    InputMethod(ChoosenOperation);
                 }
 
                 PrintOutUpAndDown(MenuInfo, ChoosenOne);
