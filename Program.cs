@@ -7,6 +7,32 @@ namespace Matrix_Calculator
     class Program
     {
 
+        static bool TraceM()
+        {
+            return false;
+        }
+        static void MainMenu()
+        {
+
+        }
+        static void MethodMenu()
+        {
+
+        }
+        static void InputPath()
+        {
+
+        }
+        static void InputMatrix()
+        {
+
+        }
+        static bool CheckMatrix()
+        {
+            return false;
+        }
+
+
         public static void PrintOutUpAndDown(List<string> InputList, int ChoosenOne)
         {
             // The loop that goes through all of the menu items.
@@ -30,14 +56,16 @@ namespace Matrix_Calculator
         static void Main(string[] args)
         {
             int ChoosenOne = 0;
+            short MenuPosition = 0;
             List<string> MenuInfo = new List<string>();
-            MenuInfo.Add("Find trace matrix.");
-            MenuInfo.Add("Find transpose matrix.");
-            MenuInfo.Add("Find sum of two matrices.");
-            MenuInfo.Add("Find difference of two matrices.");
-            MenuInfo.Add("Find product of the two matrices.");
-            MenuInfo.Add("Find product of the matrix on number. ");
-            MenuInfo.Add("Find determinant of the matrix.");
+            List<string> MainMenuInfo = new List<string>();
+            MainMenuInfo.Add("Find trace matrix.");
+            MainMenuInfo.Add("Find transpose matrix.");
+            MainMenuInfo.Add("Find sum of two matrices.");
+            MainMenuInfo.Add("Find difference of two matrices.");
+            MainMenuInfo.Add("Find product of the two matrices.");
+            MainMenuInfo.Add("Find product of the matrix on number. ");
+            MainMenuInfo.Add("Find determinant of the matrix.");
 
             /* 1. нахождение следа матрицы;  KV
             2. транспонирование матрицы; every
@@ -49,6 +77,10 @@ namespace Matrix_Calculator
 
             do
             {
+                if (MenuPosition == 0)
+                {
+                    MenuInfo = MainMenuInfo;
+                }
                 Console.Clear();
                 PrintOutUpAndDown(MenuInfo, ChoosenOne);
                 ConsoleKeyInfo key = Console.ReadKey(true);
