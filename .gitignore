@@ -1,6 +1,6 @@
 Matrix_Calculator.csproj
-obj
-bin
+obj/
+bin/
 bin/Debug/netcoreapp3.1/Matrix_Calculator.dll
 bin/Debug/netcoreapp3.1/Matrix_Calculator.dll
 *.pdb
