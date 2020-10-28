@@ -50,7 +50,9 @@ namespace Matrix_Calculator
             do
             {
                 Console.Clear();
+                PrintOutUpAndDown(MenuInfo, ChoosenOne);
                 ConsoleKeyInfo key = Console.ReadKey(true);
+
                 // Simple switch, if uparrow then decrease, downarrow then increase.
                 switch (key.Key)
                 {
