@@ -496,56 +496,10 @@ namespace Matrix_Calculator
                         goto case (100);
                     case (100):
 
-                        int n = int.Parse(RandomInput[0].Split('*')[0]);
-                        int m = int.Parse(RandomInput[0].Split('*')[1]);
-
-                        for (int i = 0; i < n; i++)
-                        {
-                            string Line = "";
-                            for (int j = 0; j < m; j++)
-                            {
-                                if (j != m - 1)
-                                    Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
-                                else
-                                    Line += rnd.Next(RandomRange[0], RandomRange[1]);
-
-
-                            }
-                            RandomInput = AddElementToArray(RandomInput, Line);
-                        }
+                        RandomOneMatrix(ref RandomInput, RandomRange, ref rnd);
                         break;
                     case (200):
-                        if (ChoosenOperation != 4)
-                            RandomInput[0] = RandomInput[0] + " " + RandomInput[0];
-                        int n1 = int.Parse(RandomInput[0].Split(' ')[0].Split('*')[0]);
-                        int m1 = int.Parse(RandomInput[0].Split(' ')[0].Split('*')[1]);
-                        int n2 = int.Parse(RandomInput[0].Split(' ')[1].Split('*')[0]);
-                        int m2 = int.Parse(RandomInput[0].Split(' ')[1].Split('*')[1]);
-                        for (int i = 0; i < n1; i++)
-                        {
-                            string Line = "";
-                            for (int j = 0; j < m1; j++)
-                            {
-                                if (j != m1 - 1)
-                                    Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
-                                else
-                                    Line += rnd.Next(RandomRange[0], RandomRange[1]);
-                            }
-                            RandomInput = AddElementToArray(RandomInput, Line);
-                        }
-                        RandomInput = AddElementToArray(RandomInput, "-");
-                        for (int i = 0; i < n2; i++)
-                        {
-                            string Line = "";
-                            for (int j = 0; j < m2; j++)
-                            {
-                                if (j != m2 - 1)
-                                    Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
-                                else
-                                    Line += rnd.Next(RandomRange[0], RandomRange[1]);
-                            }
-                            RandomInput = AddElementToArray(RandomInput, Line);
-                        }
+                        RandomTwoMatrix(ref RandomInput, RandomRange, ref rnd);
 
                         break;
                     default:
@@ -565,6 +519,60 @@ namespace Matrix_Calculator
             }
 
             MenuInfo = new List<string>();
+        }
+        static void RandomOneMatrix(ref string[] RandomInput, int[] RandomRange, ref Random rnd)
+        {
+            int n = int.Parse(RandomInput[0].Split('*')[0]);
+            int m = int.Parse(RandomInput[0].Split('*')[1]);
+
+            for (int i = 0; i < n; i++)
+            {
+                string Line = "";
+                for (int j = 0; j < m; j++)
+                {
+                    if (j != m - 1)
+                        Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
+                    else
+                        Line += rnd.Next(RandomRange[0], RandomRange[1]);
+
+
+                }
+                RandomInput = AddElementToArray(RandomInput, Line);
+            }
+        }
+        static void RandomTwoMatrix(ref string[] RandomInput, int[] RandomRange, ref Random rnd)
+        {
+            if (ChoosenOperation != 4)
+                RandomInput[0] = RandomInput[0] + " " + RandomInput[0];
+            int n1 = int.Parse(RandomInput[0].Split(' ')[0].Split('*')[0]);
+            int m1 = int.Parse(RandomInput[0].Split(' ')[0].Split('*')[1]);
+            int n2 = int.Parse(RandomInput[0].Split(' ')[1].Split('*')[0]);
+            int m2 = int.Parse(RandomInput[0].Split(' ')[1].Split('*')[1]);
+            for (int i = 0; i < n1; i++)
+            {
+                string Line = "";
+                for (int j = 0; j < m1; j++)
+                {
+                    if (j != m1 - 1)
+                        Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
+                    else
+                        Line += rnd.Next(RandomRange[0], RandomRange[1]);
+                }
+                RandomInput = AddElementToArray(RandomInput, Line);
+            }
+            RandomInput = AddElementToArray(RandomInput, "-");
+            for (int i = 0; i < n2; i++)
+            {
+                string Line = "";
+                for (int j = 0; j < m2; j++)
+                {
+                    if (j != m2 - 1)
+                        Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
+                    else
+                        Line += rnd.Next(RandomRange[0], RandomRange[1]);
+                }
+                RandomInput = AddElementToArray(RandomInput, Line);
+            }
         }
         static bool CheckMatrix()
         {
