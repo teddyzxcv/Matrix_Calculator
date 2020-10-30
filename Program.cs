@@ -56,20 +56,28 @@ namespace Matrix_Calculator
         }
         static void InputMethod(int ChoosenMethodInput)
         {
-
-            switch (ChoosenMethodInput)
+            try
             {
-                case (0):
-                    InputPath();
-                    break;
-                case (1):
-                    InputMatrix();
-                    break;
-                case (2):
-                    RandomMatrix();
-                    break;
-                default:
-                    break;
+                switch (ChoosenMethodInput)
+                {
+                    case (0):
+                        InputPath();
+                        break;
+                    case (1):
+                        InputMatrix();
+                        break;
+                    case (2):
+                        RandomMatrix();
+                        break;
+                    default:
+                        break;
+                }
+                if (!CheckMatrix())
+                    throw new Exception();
+            }
+            catch
+            {
+                Console.WriteLine("Worng input, Plz try again!");
             }
         }
         // Size of matrix;
@@ -99,7 +107,7 @@ namespace Matrix_Calculator
         }
         static void InputMatrix()
         {
-            Console.WriteLine("Plz, input correct matrix(ces)");
+            Console.WriteLine("Plz, input correct matrix(ces), type 'exit' to exit the input mode");
             string[] ConsoleInput = new string[1];
             string InputLine = "";
             ConsoleInput[0] = Console.ReadLine();
@@ -128,17 +136,21 @@ namespace Matrix_Calculator
             }
             else
                 throw new Exception();
+
             MatrixA = new double[n, m];
             for (int i = 1; i < n + 1; i++)
             {
                 string[] FileLine = FileInput[i].Split(' ');
+
                 if (FileLine.Length != m)
                     throw new Exception();
+
                 for (int j = 0; j < FileLine.Length; j++)
                 {
                     MatrixA[i - 1, j] = double.Parse(FileLine[j]);
                 }
             }
+
         }
         static void ReadTwoMatrix(string[] FileInput)
         {
@@ -158,7 +170,6 @@ namespace Matrix_Calculator
             }
             else
                 throw new Exception();
-
             MatrixA = new double[n1, m1];
             MatrixB = new double[n2, m2];
             int DivPos = 0;
@@ -174,8 +185,10 @@ namespace Matrix_Calculator
                     throw new Exception();
                 }
             }
-            if (DivPos != FileInput.Length - 2 - n1)
+
+            if (DivPos != FileInput.Length - 1 - n1)
                 throw new Exception();
+
             for (int i = 1; i < DivPos; i++)
             {
                 string[] FileLine = FileInput[i].Split(' ');
@@ -235,23 +248,31 @@ namespace Matrix_Calculator
             {
                 if (ChoosenOperation == 1 || ChoosenOperation == 0 || ChoosenOperation == 6)
                 {
+                    Console.WriteLine("1m");
                     ReadOneMatrix(Input);
+                    PrintMatrix(MatrixA);
                     return;
                 }
                 else if (ChoosenOperation == 2 || ChoosenOperation == 3 || ChoosenOperation == 4)
                 {
+                    Console.WriteLine("2m");
                     ReadTwoMatrix(Input);
+                    PrintMatrix(MatrixA);
+                    Console.WriteLine();
+                    PrintMatrix(MatrixB);
                     return;
                 }
                 else if (ChoosenOperation == 5)
                 {
+                    Console.WriteLine("1m+1n");
                     ReadOneAndPrMatrix(Input);
+                    PrintMatrix(MatrixA);
                     return;
                 }
             }
             catch
             {
-                Console.WriteLine("Incorrect input in the file!");
+                Console.WriteLine("Incorrect input! Read");
             }
         }
         static void RandomMatrix()
@@ -259,29 +280,113 @@ namespace Matrix_Calculator
             string[] RandomInput = new string[1];
             try
             {
-                if (ChoosenOperation == 1 || ChoosenOperation == 0 || ChoosenOperation == 6)
+                Random rnd = new Random();
+                Console.WriteLine("Plz, input range of random number in matrix and number(n-m)");
+                int[] RandomRange = new int[2];
+                string RangeInput = Console.ReadLine();
+                RandomRange[0] = int.Parse(RangeInput.Split('-')[0]);
+                RandomRange[1] = int.Parse(RangeInput.Split('-')[1]);
+                switch (ChoosenOperation)
                 {
-                    Console.WriteLine("Plz, input correct size of matrix (n*m)");
-                    RandomInput[0] = Console.ReadLine();
-                    return;
-                }
-                else if (ChoosenOperation == 2 || ChoosenOperation == 3 || ChoosenOperation == 4)
-                {
-                    Console.WriteLine("Plz, input correct size of first matrix (n*m)");
-                    RandomInput[0] = Console.ReadLine();
-                    Console.WriteLine("Plz, input correct size of second matrix (n*m)");
-                    RandomInput = AddElementToArray(RandomInput, Console.ReadLine());
-                    return;
-                }
-                else if (ChoosenOperation == 5)
-                {
+                    case (0):
+                        Console.WriteLine("Plz, input correct size of matrix (n*n)");
+                        RandomInput[0] = Console.ReadLine();
+                        goto case (100);
+                    case (1):
+                        Console.WriteLine("Plz, input correct size of matrix (n*m)");
+                        RandomInput[0] = Console.ReadLine();
+                        goto case (100);
+                    case (2):
+                        Console.WriteLine("Plz, input correct size of matrices (n*m)");
+                        RandomInput[0] = Console.ReadLine();
+                        goto case (200);
+                    case (3):
+                        Console.WriteLine("Plz, input correct size of matrices (n*m)");
+                        RandomInput[0] = Console.ReadLine();
+                        goto case (200);
+                    case (4):
+                        Console.WriteLine("Plz, input correct size of matrix (n*k)");
+                        RandomInput[0] = Console.ReadLine();
+                        Console.WriteLine("Plz, input correct size of matrix (k*m)");
+                        RandomInput[0] = RandomInput[0] + " " + Console.ReadLine();
+                        goto case (200);
+                    case (5):
+                        Console.WriteLine("Plz, input correct size of matrix (n*m)");
+                        RandomInput[0] = Console.ReadLine();
+                        goto case (100);
+                    case (6):
+                        Console.WriteLine("Plz, input correct size of matrix (n*n)");
+                        RandomInput[0] = Console.ReadLine();
+                        goto case (100);
+                    case (100):
 
-                    return;
+                        int n = int.Parse(RandomInput[0].Split('*')[0]);
+                        int m = int.Parse(RandomInput[0].Split('*')[1]);
+
+                        for (int i = 0; i < n; i++)
+                        {
+
+                            string Line = "";
+                            for (int j = 0; j < m; j++)
+                            {
+                                if (j != m - 1)
+                                    Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
+                                else
+                                    Line += rnd.Next(RandomRange[0], RandomRange[1]);
+
+
+                            }
+                            RandomInput = AddElementToArray(RandomInput, Line);
+                        }
+
+                        break;
+                    case (200):
+                        if (ChoosenOperation != 4)
+                            RandomInput[0] = RandomInput[0] + " " + RandomInput[0];
+                        int n1 = int.Parse(RandomInput[0].Split(' ')[0].Split('*')[0]);
+                        int m1 = int.Parse(RandomInput[0].Split(' ')[0].Split('*')[1]);
+                        int n2 = int.Parse(RandomInput[0].Split(' ')[1].Split('*')[0]);
+                        int m2 = int.Parse(RandomInput[0].Split(' ')[1].Split('*')[1]);
+                        for (int i = 0; i < n1; i++)
+                        {
+                            string Line = "";
+                            for (int j = 0; j < m1; j++)
+                            {
+                                if (j != m1 - 1)
+                                    Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
+                                else
+                                    Line += rnd.Next(RandomRange[0], RandomRange[1]);
+                            }
+                            RandomInput = AddElementToArray(RandomInput, Line);
+
+                        }
+                        RandomInput = AddElementToArray(RandomInput, "-");
+                        for (int i = 0; i < n2; i++)
+                        {
+                            string Line = "";
+                            for (int j = 0; j < m2; j++)
+                            {
+                                if (j != m2 - 1)
+                                    Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
+                                else
+                                    Line += rnd.Next(RandomRange[0], RandomRange[1]);
+                            }
+                            RandomInput = AddElementToArray(RandomInput, Line);
+                        }
+
+                        break;
+                    default:
+                        throw new Exception();
+
+
                 }
+                ReadMatrix(RandomInput);
+
+
             }
             catch
             {
-                Console.WriteLine("Incorrect input in the file!");
+                Console.WriteLine("Incorrect input! Rand");
             }
 
             MenuInfo = new List<string>();
@@ -290,17 +395,34 @@ namespace Matrix_Calculator
         {
             try
             {
-                if (ChoosenOperation == 2 || ChoosenOperation == 3)
+                switch (ChoosenOperation)
                 {
-                    if (MatrixA.GetLength(0) != MatrixB.GetLength(0) || MatrixA.GetLength(1) != MatrixB.GetLength(1))
-                        throw new Exception();
+                    case (0):
+                        if (MatrixA.GetLength(0) != MatrixA.GetLength(1))
+                            throw new Exception();
+                        break;
+                    case (1):
+                        break;
+                    case (2):
+                        if (MatrixA.GetLength(0) != MatrixB.GetLength(0) || MatrixA.GetLength(1) != MatrixB.GetLength(1))
+                            throw new Exception();
+                        break;
+                    case (3):
+                        if (MatrixA.GetLength(0) != MatrixB.GetLength(0) || MatrixA.GetLength(1) != MatrixB.GetLength(1))
+                            throw new Exception();
+                        break;
+                    case (4):
+                        if (MatrixA.GetLength(1) != MatrixB.GetLength(0))
+                            throw new Exception();
+                        break;
+                    case (5):
+                        break;
+                    case (6):
+                        if (MatrixA.GetLength(0) != MatrixA.GetLength(1))
+                            throw new Exception();
+                        break;
                 }
-                else if (ChoosenOperation == 4)
-                {
-                    if (MatrixA.GetLength(1) != MatrixB.GetLength(0))
-                        throw new Exception();
-                }
-                return false;
+                return true;
             }
             catch
             {
@@ -350,71 +472,80 @@ namespace Matrix_Calculator
         }
         static void Main(string[] args)
         {
-
-            do
+            try
             {
-                MenuPosition = PositionClear(MenuPosition);
-                Console.Clear();
-                if (MenuPosition == 0)
+                do
                 {
-                    Console.WriteLine("Main Menu");
+                    MenuPosition = PositionClear(MenuPosition);
+                    Console.Clear();
+                    if (MenuPosition == 0)
+                    {
+                        Console.WriteLine("Main Menu");
 
-                    MenuInfo = MainMenu();
+                        MenuInfo = MainMenu();
 
-                }
-                if (MenuPosition == 1)
-                {
-                    Console.WriteLine(MenuName);
-                    MenuInfo = MethodMenu();
-                }
-                if (MenuPosition == 2)
-                {
-                    InputMethod(ChoosenMethodInput);
-                }
-
-                PrintOutUpAndDown(MenuInfo, ChoosenOne);
-
-                ConsoleKeyInfo key = Console.ReadKey(true);
-
-                // Simple switch, if uparrow then decrease, downarrow then increase.
-                switch (key.Key)
-                {
-                    case (ConsoleKey.UpArrow):
-                        // Move cursor up.
-                        if (ChoosenOne == 0)
-                            ChoosenOne = MenuInfo.Count - 1;
-                        else
-                            ChoosenOne--;
-                        break;
-                    case (ConsoleKey.DownArrow):
-                        // Move cursor down.
-                        if (ChoosenOne == MenuInfo.Count - 1)
-                            ChoosenOne = 0;
-                        else
-                            ChoosenOne++;
-                        break;
-                    case (ConsoleKey.RightArrow):
-                        if (MenuPosition <= 2)
-                        {
-                            MenuPosition += 1;
+                    }
+                    if (MenuPosition == 1)
+                    {
+                        Console.WriteLine(MenuName);
+                        MenuInfo = MethodMenu();
+                    }
+                    if (MenuPosition == 2)
+                    {
+                        InputMethod(ChoosenMethodInput);
 
 
-                            ChoosenMethodInput = ChoosenOne;
-                            if (MenuPosition == 1)
+                    }
+
+                    PrintOutUpAndDown(MenuInfo, ChoosenOne);
+
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+
+                    // Simple switch, if uparrow then decrease, downarrow then increase.
+                    switch (key.Key)
+                    {
+                        case (ConsoleKey.UpArrow):
+                            // Move cursor up.
+                            if (ChoosenOne == 0)
+                                ChoosenOne = MenuInfo.Count - 1;
+                            else
+                                ChoosenOne--;
+                            break;
+                        case (ConsoleKey.DownArrow):
+                            // Move cursor down.
+                            if (ChoosenOne == MenuInfo.Count - 1)
+                                ChoosenOne = 0;
+                            else
+                                ChoosenOne++;
+                            break;
+                        case (ConsoleKey.RightArrow):
+                            if (MenuPosition <= 2)
                             {
-                                MenuName = MenuInfo[ChoosenOne];
-                                ChoosenOperation = ChoosenOne;
-                            }
-                            ChoosenOne = 0;
-                        }
-                        break;
-                    case (ConsoleKey.LeftArrow):
-                        MenuPosition -= 1;
-                        ChoosenOne = 0;
-                        break;
-                }
+                                MenuPosition += 1;
 
-            } while (true);
+
+                                ChoosenMethodInput = ChoosenOne;
+                                if (MenuPosition == 1)
+                                {
+                                    MenuName = MenuInfo[ChoosenOne];
+                                    ChoosenOperation = ChoosenOne;
+                                }
+                                ChoosenOne = 0;
+                            }
+                            break;
+                        case (ConsoleKey.LeftArrow):
+                            MenuPosition -= 1;
+                            ChoosenOne = 0;
+                            break;
+                    }
+
+                } while (true);
+            }
+            catch
+            {
+                Console.WriteLine("Something Went Wrong, Restart the program plz...");
+            }
+
         }
     }
 }
