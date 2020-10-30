@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
@@ -12,6 +11,7 @@ namespace Matrix_Calculator
         static int ChoosenOne = 0;
         static short MenuPosition = 0;
         static int ChoosenOperation = 0;
+        static double Det = 0;
 
         static int ChoosenMethodInput = 0;
         static string MenuName = "";
@@ -19,11 +19,183 @@ namespace Matrix_Calculator
         static double[,] MatrixA = new double[1, 1];
         static double[,] MatrixB = new double[1, 1];
         static string FilePath = "";
+        static bool Error = false;
 
-        static bool TraceM()
+        static double TraceM()
         {
-            return false;
+            double Output = 0;
+            for (int i = 0; i < MatrixA.GetLength(0); i++)
+            {
+                Output += MatrixA[i, i];
+            }
+            return Output;
         }
+        static double[,] TranposeM()
+        {
+            double[,] Output = new double[MatrixA.GetLength(1), MatrixA.GetLength(0)];
+            for (int i = 0; i < MatrixA.GetLength(0); i++)
+            {
+                for (int j = 0; j < MatrixA.GetLength(1); j++)
+                {
+                    Output[j, i] = MatrixA[i, j];
+                }
+            }
+            return Output;
+
+        }
+        static double[,] Sum2M()
+        {
+            double[,] Output = new double[MatrixA.GetLength(0), MatrixA.GetLength(1)];
+            for (int i = 0; i < MatrixA.GetLength(0); i++)
+            {
+                for (int j = 0; j < MatrixA.GetLength(1); j++)
+                {
+                    Output[i, j] = MatrixA[i, j] + MatrixB[i, j];
+                }
+            }
+            return Output;
+        }
+        static double[,] Dif2M()
+        {
+            double[,] Output = new double[MatrixA.GetLength(0), MatrixA.GetLength(1)];
+            for (int i = 0; i < MatrixA.GetLength(0); i++)
+            {
+                for (int j = 0; j < MatrixA.GetLength(1); j++)
+                {
+                    Output[i, j] = MatrixA[i, j] - MatrixB[i, j];
+                }
+            }
+            return Output;
+        }
+        static double[,] Pro2M()
+        {
+            double[,] Output = new double[MatrixA.GetLength(0), MatrixB.GetLength(1)];
+            for (int i = 0; i < MatrixA.GetLength(0); i++)
+            {
+                for (int j = 0; j < MatrixB.GetLength(1); j++)
+                {
+                    double SumOfIJ = 0;
+                    for (int k = 0; k < MatrixA.GetLength(1); k++)
+                    {
+                        SumOfIJ += MatrixA[i, k] * MatrixB[k, j];
+                    }
+                    Output[i, j] = SumOfIJ;
+                }
+            }
+            return Output;
+
+        }
+        static double[,] Pro1N()
+        {
+            double[,] Output = new double[MatrixA.GetLength(0), MatrixA.GetLength(1)];
+            for (int i = 0; i < MatrixA.GetLength(0); i++)
+            {
+                for (int j = 0; j < MatrixA.GetLength(1); j++)
+                {
+                    Output[i, j] = MatrixA[i, j] * ProductToMake;
+                }
+            }
+            return Output;
+        }
+        static int InvertN(int[] b)
+        {
+            int Invert = 0;
+            for (int i = 0; i < b.Length - 1; i++)
+            {
+                for (int j = i + 1; j < b.Length; j++)
+                {
+                    if (b[i] < b[j])
+                        Invert++;
+                }
+            }
+            return Invert;
+        }
+        static void Permutation(int[] b, int size, int n)
+        {
+            // if size becomes 1 then prints the obtained
+            // permutation
+            if (size == 1)
+            {
+                double ProEachPerm = 1;
+                for (int i = 0; i < MatrixA.GetLength(0); i++)
+                {
+                    ProEachPerm *= MatrixA[i, b[i] - 1];
+                }
+                Det -= Math.Pow(-1, InvertN(b)) * ProEachPerm;
+            }
+
+            for (int i = 0; i < size; i++)
+            {
+                Permutation(b, size - 1, n);
+
+                // if size is odd, swap 0th i.e (first) and
+                // (size-1)th i.e (last) element
+                if (size % 2 == 1)
+                {
+                    int temp = b[0];
+                    b[0] = b[size - 1];
+                    b[size - 1] = temp;
+                }
+
+                // If size is even, swap ith and
+                // (size-1)th i.e (last) element
+                else
+                {
+                    int temp = b[i];
+                    b[i] = b[size - 1];
+                    b[size - 1] = temp;
+                }
+            }
+        }
+
+        static void CalculationM()
+        {
+            if (!Error)
+                switch (ChoosenOperation)
+                {
+                    case (0):
+                        Console.WriteLine($"Trace:{TraceM()}");
+                        break;
+                    case (1):
+                        Console.WriteLine("Tranpose matrix:");
+                        PrintMatrix(TranposeM(), 3);
+                        break;
+                    case (2):
+                        Console.WriteLine("Sum of two matrices:");
+                        PrintMatrix(Sum2M(), 3);
+                        break;
+                    case (3):
+                        Console.WriteLine("Dif of two matrices:");
+                        PrintMatrix(Dif2M(), 3);
+                        break;
+                    case (4):
+                        Console.WriteLine("Product of two matrices:");
+                        PrintMatrix(Pro2M(), 3);
+                        break;
+                    case (5):
+                        Console.WriteLine($"This is the number which is gonna multiply on the matrix:{ProductToMake}");
+                        Console.WriteLine("Product of matrices on number:");
+                        PrintMatrix(Pro1N(), 3);
+                        break;
+                    case (6):
+                        Det = 0;
+                        int[] b1 = new int[MatrixA.GetLength(0)];
+                        for (int i = 0; i < MatrixA.GetLength(0); i++)
+                        {
+                            b1[i] = i + 1;
+                        }
+                        Permutation(b1, b1.Length, b1.Length);
+                        Console.WriteLine($"Determinant:{Det}");
+                        break;
+                }
+            else
+            {
+                Console.WriteLine("Error!");
+                MenuPosition = 0;
+            }
+        }
+
+
         public static string[] AddElementToArray(string[] array, string Addthing)
         {
             /// Add element of array from the certain index.
@@ -77,7 +249,9 @@ namespace Matrix_Calculator
             }
             catch
             {
-                Console.WriteLine("Worng input, Plz try again!");
+                Console.WriteLine("Worng input, Plz try again! Press Enter to continue...");
+                Error = true;
+                MenuPosition = 0;
             }
         }
         // Size of matrix;
@@ -100,7 +274,9 @@ namespace Matrix_Calculator
             }
             catch
             {
-                Console.WriteLine("Incorrect Input path!");
+                Console.WriteLine("Incorrect Input path! Press Enter to continue...");
+                Error = true;
+                MenuPosition = 0;
             }
 
             MenuInfo = new List<string>();
@@ -185,10 +361,8 @@ namespace Matrix_Calculator
                     throw new Exception();
                 }
             }
-
-            if (DivPos != FileInput.Length - 1 - n1)
+            if (DivPos != FileInput.Length - 1 - n2)
                 throw new Exception();
-
             for (int i = 1; i < DivPos; i++)
             {
                 string[] FileLine = FileInput[i].Split(' ');
@@ -238,8 +412,7 @@ namespace Matrix_Calculator
                     MatrixA[i - 2, j] = double.Parse(FileLine[j]);
                 }
             }
-            PrintMatrix(MatrixA);
-            Console.WriteLine(ProductToMake);
+
 
         }
         static void ReadMatrix(string[] Input)
@@ -250,29 +423,31 @@ namespace Matrix_Calculator
                 {
                     Console.WriteLine("1m");
                     ReadOneMatrix(Input);
-                    PrintMatrix(MatrixA);
+                    PrintMatrix(MatrixA, 1);
                     return;
                 }
                 else if (ChoosenOperation == 2 || ChoosenOperation == 3 || ChoosenOperation == 4)
                 {
                     Console.WriteLine("2m");
                     ReadTwoMatrix(Input);
-                    PrintMatrix(MatrixA);
+                    PrintMatrix(MatrixA, 1);
                     Console.WriteLine();
-                    PrintMatrix(MatrixB);
+                    PrintMatrix(MatrixB, 2);
                     return;
                 }
                 else if (ChoosenOperation == 5)
                 {
                     Console.WriteLine("1m+1n");
                     ReadOneAndPrMatrix(Input);
-                    PrintMatrix(MatrixA);
+                    PrintMatrix(MatrixA, 1);
                     return;
                 }
             }
             catch
             {
-                Console.WriteLine("Incorrect input! Read");
+                Console.WriteLine("Incorrect input! (Error in ReadMode) Press Enter to continue...");
+                Error = true;
+                MenuPosition = 0;
             }
         }
         static void RandomMatrix()
@@ -313,6 +488,7 @@ namespace Matrix_Calculator
                     case (5):
                         Console.WriteLine("Plz, input correct size of matrix (n*m)");
                         RandomInput[0] = Console.ReadLine();
+                        RandomInput = AddElementToArray(RandomInput, rnd.Next(RandomRange[0], RandomRange[1]).ToString());
                         goto case (100);
                     case (6):
                         Console.WriteLine("Plz, input correct size of matrix (n*n)");
@@ -325,7 +501,6 @@ namespace Matrix_Calculator
 
                         for (int i = 0; i < n; i++)
                         {
-
                             string Line = "";
                             for (int j = 0; j < m; j++)
                             {
@@ -338,7 +513,6 @@ namespace Matrix_Calculator
                             }
                             RandomInput = AddElementToArray(RandomInput, Line);
                         }
-
                         break;
                     case (200):
                         if (ChoosenOperation != 4)
@@ -358,7 +532,6 @@ namespace Matrix_Calculator
                                     Line += rnd.Next(RandomRange[0], RandomRange[1]);
                             }
                             RandomInput = AddElementToArray(RandomInput, Line);
-
                         }
                         RandomInput = AddElementToArray(RandomInput, "-");
                         for (int i = 0; i < n2; i++)
@@ -386,7 +559,9 @@ namespace Matrix_Calculator
             }
             catch
             {
-                Console.WriteLine("Incorrect input! Rand");
+                Console.WriteLine("Incorrect input! (Error in RandMode) Press Enter to continue...");
+                Error = true;
+                MenuPosition = 0;
             }
 
             MenuInfo = new List<string>();
@@ -437,8 +612,12 @@ namespace Matrix_Calculator
                 return 2;
             return Position;
         }
-        static void PrintMatrix(double[,] A)
+        static void PrintMatrix(double[,] A, int Id)
         {
+            if (Id == 1)
+                Console.WriteLine("MatrixA:");
+            else if (Id == 2)
+                Console.WriteLine("MatrixB:");
             for (int i = 0; i < A.GetLength(0); i++)
             {
                 for (int j = 0; j < A.GetLength(1); j++)
@@ -472,79 +651,79 @@ namespace Matrix_Calculator
         }
         static void Main(string[] args)
         {
-            try
+            // try
+            // {
+            do
             {
-                do
+                Error = false;
+                MenuPosition = PositionClear(MenuPosition);
+                Console.Clear();
+                if (MenuPosition == 0)
                 {
-                    MenuPosition = PositionClear(MenuPosition);
-                    Console.Clear();
-                    if (MenuPosition == 0)
-                    {
-                        Console.WriteLine("Main Menu");
+                    Console.WriteLine("Main Menu");
 
-                        MenuInfo = MainMenu();
+                    MenuInfo = MainMenu();
 
-                    }
-                    if (MenuPosition == 1)
-                    {
-                        Console.WriteLine(MenuName);
-                        MenuInfo = MethodMenu();
-                    }
-                    if (MenuPosition == 2)
-                    {
-                        InputMethod(ChoosenMethodInput);
+                }
+                if (MenuPosition == 1)
+                {
+                    Console.WriteLine(MenuName);
+                    MenuInfo = MethodMenu();
+                }
+                if (MenuPosition == 2)
+                {
+                    InputMethod(ChoosenMethodInput);
+                    CalculationM();
+                }
 
+                PrintOutUpAndDown(MenuInfo, ChoosenOne);
 
-                    }
+                ConsoleKeyInfo key = Console.ReadKey(true);
 
-                    PrintOutUpAndDown(MenuInfo, ChoosenOne);
-
-                    ConsoleKeyInfo key = Console.ReadKey(true);
-
-                    // Simple switch, if uparrow then decrease, downarrow then increase.
-                    switch (key.Key)
-                    {
-                        case (ConsoleKey.UpArrow):
-                            // Move cursor up.
-                            if (ChoosenOne == 0)
-                                ChoosenOne = MenuInfo.Count - 1;
-                            else
-                                ChoosenOne--;
-                            break;
-                        case (ConsoleKey.DownArrow):
-                            // Move cursor down.
-                            if (ChoosenOne == MenuInfo.Count - 1)
-                                ChoosenOne = 0;
-                            else
-                                ChoosenOne++;
-                            break;
-                        case (ConsoleKey.RightArrow):
-                            if (MenuPosition <= 2)
-                            {
-                                MenuPosition += 1;
-
-
-                                ChoosenMethodInput = ChoosenOne;
-                                if (MenuPosition == 1)
-                                {
-                                    MenuName = MenuInfo[ChoosenOne];
-                                    ChoosenOperation = ChoosenOne;
-                                }
-                                ChoosenOne = 0;
-                            }
-                            break;
-                        case (ConsoleKey.LeftArrow):
-                            MenuPosition -= 1;
+                // Simple switch, if uparrow then decrease, downarrow then increase.
+                switch (key.Key)
+                {
+                    case (ConsoleKey.UpArrow):
+                        // Move cursor up.
+                        if (ChoosenOne == 0)
+                            ChoosenOne = MenuInfo.Count - 1;
+                        else
+                            ChoosenOne--;
+                        break;
+                    case (ConsoleKey.DownArrow):
+                        // Move cursor down.
+                        if (ChoosenOne == MenuInfo.Count - 1)
                             ChoosenOne = 0;
-                            break;
-                    }
+                        else
+                            ChoosenOne++;
+                        break;
+                    case (ConsoleKey.RightArrow):
+                        if (MenuPosition <= 2)
+                        {
+                            MenuPosition += 1;
 
-                } while (true);
-            }
-            catch
-            {
-                Console.WriteLine("Something Went Wrong, Restart the program plz...");
-            }
+
+                            ChoosenMethodInput = ChoosenOne;
+                            if (MenuPosition == 1)
+                            {
+                                MenuName = MenuInfo[ChoosenOne];
+                                ChoosenOperation = ChoosenOne;
+                            }
+                            ChoosenOne = 0;
+                        }
+                        break;
+                    case (ConsoleKey.LeftArrow):
+                        MenuPosition -= 1;
+                        ChoosenOne = 0;
+                        break;
+                }
+
+            } while (true);
+            // }
+            // catch
+            // {
+            // Console.WriteLine("Something Went Wrong, Restart the program plz...");
+            //  }
 
         }
     }
