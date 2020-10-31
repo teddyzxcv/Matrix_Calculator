@@ -110,23 +110,23 @@ namespace Matrix_Calculator
             }
             return Invert;
         }
-        static void Permutation(int[] b, int size, int n)
+        static void Permutation(int[] b, int size, int n, double[,] A)
         {
             // if size becomes 1 then prints the obtained
             // permutation
             if (size == 1)
             {
                 double ProEachPerm = 1;
-                for (int i = 0; i < MatrixA.GetLength(0); i++)
+                for (int i = 0; i < A.GetLength(0); i++)
                 {
-                    ProEachPerm *= MatrixA[i, b[i] - 1];
+                    ProEachPerm *= A[i, b[i] - 1];
                 }
                 Det -= Math.Pow(-1, InvertN(b)) * ProEachPerm;
             }
 
             for (int i = 0; i < size; i++)
             {
-                Permutation(b, size - 1, n);
+                Permutation(b, size - 1, n, A);
 
                 // if size is odd, swap 0th i.e (first) and
                 // (size-1)th i.e (last) element
@@ -147,50 +147,112 @@ namespace Matrix_Calculator
                 }
             }
         }
+        static double Deter(double[,] A)
+        {
+            Det = 0;
+            int[] b1 = new int[A.GetLength(0)];
+            for (int i = 0; i < A.GetLength(0); i++)
+            {
+                b1[i] = i + 1;
+            }
+            Permutation(b1, b1.Length, b1.Length, A);
+            if (b1.Length == 1)
+                Det *= -1;
+            return Det;
+        }
+        static double[] CramerRule()
+        {
+            double[] OutPut = new double[MatrixA.GetLength(0)];
+            double MainDet = Deter(MatrixA);
+            if (MainDet == 0)
+                throw new Exception();
+            Console.WriteLine("Delta: " + MainDet);
+            double[] SubDet = new double[MatrixA.GetLength(0)];
+            for (int i = 0; i < MatrixA.GetLength(0); i++)
+            {
+                double[,] SubMat = new double[MatrixA.GetLength(0), MatrixA.GetLength(0)];
+
+                for (int i1 = 0; i1 < MatrixA.GetLength(0); i1++)
+                {
+
+                    for (int j1 = 0; j1 < MatrixA.GetLength(0); j1++)
+                    {
+                        if (i1 != i)
+                            SubMat[j1, i1] = MatrixA[j1, i1];
+                        else
+                            SubMat[j1, i1] = MatrixB[0, j1];
+                    }
+
+                }
+                SubDet[i] = Deter(SubMat);
+                Console.WriteLine($"Delta[{i + 1}]: " + SubDet[i]);
+            }
+
+            for (int i = 0; i < MatrixA.GetLength(0); i++)
+            {
+
+                OutPut[i] = SubDet[i] / MainDet;
+            }
+
+
+            return (OutPut);
+        }
 
         static void CalculationM()
         {
-            if (!Error)
-                switch (ChoosenOperation)
-                {
-                    case (0):
-                        Console.WriteLine($"Trace:{TraceM()}");
-                        break;
-                    case (1):
-                        Console.WriteLine("Tranpose matrix:");
-                        PrintMatrix(TranposeM(), 3);
-                        break;
-                    case (2):
-                        Console.WriteLine("Sum of two matrices:");
-                        PrintMatrix(Sum2M(), 3);
-                        break;
-                    case (3):
-                        Console.WriteLine("Dif of two matrices:");
-                        PrintMatrix(Dif2M(), 3);
-                        break;
-                    case (4):
-                        Console.WriteLine("Product of two matrices:");
-                        PrintMatrix(Pro2M(), 3);
-                        break;
-                    case (5):
-                        Console.WriteLine($"This is the number which is gonna multiply on the matrix:{ProductToMake}");
-                        Console.WriteLine("Product of matrices on number:");
-                        PrintMatrix(Pro1N(), 3);
-                        break;
-                    case (6):
-                        Det = 0;
-                        int[] b1 = new int[MatrixA.GetLength(0)];
-                        for (int i = 0; i < MatrixA.GetLength(0); i++)
-                        {
-                            b1[i] = i + 1;
-                        }
-                        Permutation(b1, b1.Length, b1.Length);
-                        Console.WriteLine($"Determinant:{Det}");
-                        break;
-                }
-            else
+            try
             {
-                Console.WriteLine("Error!");
+                if (!Error)
+                    switch (ChoosenOperation)
+                    {
+                        case (0):
+                            Console.WriteLine($"Trace:{TraceM()}");
+                            break;
+                        case (1):
+                            Console.WriteLine("Tranpose matrix:");
+                            PrintMatrix(TranposeM(), 3);
+                            break;
+                        case (2):
+                            Console.WriteLine("Sum of two matrices:");
+                            PrintMatrix(Sum2M(), 3);
+                            break;
+                        case (3):
+                            Console.WriteLine("Dif of two matrices:");
+                            PrintMatrix(Dif2M(), 3);
+                            break;
+                        case (4):
+                            Console.WriteLine("Product of two matrices:");
+                            PrintMatrix(Pro2M(), 3);
+                            break;
+                        case (5):
+                            Console.WriteLine($"This is the number which is gonna multiply on the matrix:{ProductToMake}");
+                            Console.WriteLine("Product of matrices on number:");
+                            PrintMatrix(Pro1N(), 3);
+                            break;
+                        case (6):
+                            Deter(MatrixA);
+                            Console.WriteLine($"Determinant:{Det}");
+                            break;
+                        case (7):
+                            double[] Solution = CramerRule();
+                            Console.WriteLine("Solution is here!");
+                            for (int i = 0; i < Solution.Length; i++)
+                            {
+                                Console.Write($"X{i + 1} = {Solution[i]}, ");
+                            }
+                            Console.WriteLine();
+                            PrintMatrix(MatrixA, 7);
+                            break;
+                    }
+                else
+                {
+                    Console.WriteLine("Error! Plz try again!");
+                    MenuPosition = 0;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error! Plz try again!");
                 MenuPosition = 0;
             }
         }
@@ -215,6 +277,7 @@ namespace Matrix_Calculator
             MainMenuInfo.Add("Find product of the two matrices.");
             MainMenuInfo.Add("Find product of the matrix on number.");
             MainMenuInfo.Add("Find determinant of the matrix.");
+            MainMenuInfo.Add("Find the solution of System of linear equations use Cramer's rule");
             return MainMenuInfo;
         }
         static List<string> MethodMenu()
@@ -373,7 +436,6 @@ namespace Matrix_Calculator
                     MatrixA[i - 1, j] = double.Parse(FileLine[j]);
                 }
             }
-
             for (int i = DivPos + 1; i < FileInput.Length; i++)
             {
                 string[] FileLine = FileInput[i].Split(' ');
@@ -385,18 +447,15 @@ namespace Matrix_Calculator
                 }
             }
         }
-
         static void ReadOneAndPrMatrix(string[] FileInput)
         {
             int n = 0;
             int m = 0;
-
             if (FileInput[0].Contains('*') & FileInput[0].Split('*').Length == 2)
             {
                 string[] SizeOfMatrix = FileInput[0].Split('*');
                 if (!(int.TryParse(SizeOfMatrix[0], out n) & int.TryParse(SizeOfMatrix[1], out m) & FileInput.Length == n + 2))
                     throw new Exception();
-
             }
             else
                 throw new Exception();
@@ -412,8 +471,6 @@ namespace Matrix_Calculator
                     MatrixA[i - 2, j] = double.Parse(FileLine[j]);
                 }
             }
-
-
         }
         static void ReadMatrix(string[] Input)
         {
@@ -442,6 +499,15 @@ namespace Matrix_Calculator
                     PrintMatrix(MatrixA, 1);
                     return;
                 }
+                else if (ChoosenOperation == 7)
+                {
+                    Console.WriteLine("1m|b");
+                    ReadTwoMatrix(Input);
+                    PrintMatrix(MatrixA, 7);
+                    Console.WriteLine();
+                    return;
+                }
+
             }
             catch
             {
@@ -494,22 +560,21 @@ namespace Matrix_Calculator
                         Console.WriteLine("Plz, input correct size of matrix (n*n)");
                         RandomInput[0] = Console.ReadLine();
                         goto case (100);
+                    case (7):
+                        Console.WriteLine("Plz, input correct size of matrix (n*n)");
+                        RandomInput[0] = Console.ReadLine();
+                        RandomInput[0] = RandomInput[0] + " " + $"1*{RandomInput[0].Split('*')[0]}";
+                        goto case (200);
                     case (100):
-
                         RandomOneMatrix(ref RandomInput, RandomRange, ref rnd);
                         break;
                     case (200):
                         RandomTwoMatrix(ref RandomInput, RandomRange, ref rnd);
-
                         break;
                     default:
                         throw new Exception();
-
-
                 }
                 ReadMatrix(RandomInput);
-
-
             }
             catch
             {
@@ -524,7 +589,6 @@ namespace Matrix_Calculator
         {
             int n = int.Parse(RandomInput[0].Split('*')[0]);
             int m = int.Parse(RandomInput[0].Split('*')[1]);
-
             for (int i = 0; i < n; i++)
             {
                 string Line = "";
@@ -534,15 +598,13 @@ namespace Matrix_Calculator
                         Line += rnd.Next(RandomRange[0], RandomRange[1]) + " ";
                     else
                         Line += rnd.Next(RandomRange[0], RandomRange[1]);
-
-
                 }
                 RandomInput = AddElementToArray(RandomInput, Line);
             }
         }
         static void RandomTwoMatrix(ref string[] RandomInput, int[] RandomRange, ref Random rnd)
         {
-            if (ChoosenOperation != 4)
+            if (ChoosenOperation != 4 && ChoosenOperation != 7)
                 RandomInput[0] = RandomInput[0] + " " + RandomInput[0];
             int n1 = int.Parse(RandomInput[0].Split(' ')[0].Split('*')[0]);
             int m1 = int.Parse(RandomInput[0].Split(' ')[0].Split('*')[1]);
@@ -604,6 +666,10 @@ namespace Matrix_Calculator
                         if (MatrixA.GetLength(0) != MatrixA.GetLength(1))
                             throw new Exception();
                         break;
+                    case (7):
+                        if (MatrixA.GetLength(0) != MatrixA.GetLength(1) || MatrixB.GetLength(0) != 1 || MatrixB.GetLength(1) != MatrixA.GetLength(0))
+                            throw new Exception();
+                        break;
                 }
                 return true;
             }
@@ -626,13 +692,29 @@ namespace Matrix_Calculator
                 Console.WriteLine("MatrixA:");
             else if (Id == 2)
                 Console.WriteLine("MatrixB:");
-            for (int i = 0; i < A.GetLength(0); i++)
-            {
-                for (int j = 0; j < A.GetLength(1); j++)
+            if (Id != 7)
+                for (int i = 0; i < A.GetLength(0); i++)
                 {
-                    Console.Write(A[i, j] + " ");
+                    for (int j = 0; j < A.GetLength(1); j++)
+                    {
+                        Console.Write(A[i, j] + " ");
+                    }
+                    Console.WriteLine();
                 }
-                Console.WriteLine();
+            else if (Id == 7)
+            {
+                Console.WriteLine("MatrixA|b: ");
+                for (int i = 0; i < A.GetLength(0); i++)
+                {
+                    for (int j = 0; j < A.GetLength(1); j++)
+                    {
+                        if (j != A.GetLength(1) - 1)
+                            Console.Write(A[i, j] + " ");
+                        else
+                            Console.Write(A[i, j] + " | " + MatrixB[0, i]);
+                    }
+                    Console.WriteLine();
+                }
             }
         }
 
