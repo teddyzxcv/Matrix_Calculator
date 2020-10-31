@@ -522,11 +522,11 @@ namespace Matrix_Calculator
             try
             {
                 Random rnd = new Random();
-                Console.WriteLine("Plz, input range of random number in matrix and number(n-m)");
+                Console.WriteLine("Plz, input range of random number in matrix and number(n~m)");
                 int[] RandomRange = new int[2];
                 string RangeInput = Console.ReadLine();
-                RandomRange[0] = int.Parse(RangeInput.Split('-')[0]);
-                RandomRange[1] = int.Parse(RangeInput.Split('-')[1]);
+                RandomRange[0] = int.Parse(RangeInput.Split('~')[0]);
+                RandomRange[1] = int.Parse(RangeInput.Split('~')[1]);
                 switch (ChoosenOperation)
                 {
                     case (0):
@@ -717,8 +717,6 @@ namespace Matrix_Calculator
                 }
             }
         }
-
-
         public static void PrintOutUpAndDown(List<string> InputList, int ChoosenOne)
         {
             // The loop that goes through all of the menu items.
@@ -741,8 +739,6 @@ namespace Matrix_Calculator
         }
         static void Main(string[] args)
         {
-            // try
-            // {
             do
             {
                 Error = false;
@@ -751,9 +747,7 @@ namespace Matrix_Calculator
                 if (MenuPosition == 0)
                 {
                     Console.WriteLine("Main Menu");
-
                     MenuInfo = MainMenu();
-
                 }
                 if (MenuPosition == 1)
                 {
@@ -765,11 +759,8 @@ namespace Matrix_Calculator
                     InputMethod(ChoosenMethodInput);
                     CalculationM();
                 }
-
                 PrintOutUpAndDown(MenuInfo, ChoosenOne);
-
                 ConsoleKeyInfo key = Console.ReadKey(true);
-
                 // Simple switch, if uparrow then decrease, downarrow then increase.
                 switch (key.Key)
                 {
@@ -791,8 +782,6 @@ namespace Matrix_Calculator
                         if (MenuPosition <= 2)
                         {
                             MenuPosition += 1;
-
-
                             ChoosenMethodInput = ChoosenOne;
                             if (MenuPosition == 1)
                             {
@@ -807,14 +796,7 @@ namespace Matrix_Calculator
                         ChoosenOne = 0;
                         break;
                 }
-
             } while (true);
-            // }
-            // catch
-            // {
-            // Console.WriteLine("Something Went Wrong, Restart the program plz...");
-            //  }
-
         }
     }
 }
