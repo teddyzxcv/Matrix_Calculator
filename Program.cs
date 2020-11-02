@@ -399,7 +399,7 @@ namespace Matrix_Calculator
         static void InputPath()
         {
 
-            Console.WriteLine("Plz, input correct path to your file with matrix(ces)");
+            Console.WriteLine("Plz, input correct full path to your file with matrix(ces)");
 
             FilePath = Console.ReadLine();
             try
