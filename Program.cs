@@ -898,9 +898,9 @@ namespace Matrix_Calculator
         /// Main method.
         /// </summary>
         /// <param name="args"></param>
+        static bool ExitCode = false;
         static void Main(string[] args)
         {
-
             do
             {
                 // Check the menu position.
@@ -910,7 +910,7 @@ namespace Matrix_Calculator
                 if (MenuPosition == 0)
                 {
                     // Main menu.
-                    Console.WriteLine("Main Menu");
+                    Console.WriteLine("Main Menu      Press ESC to exit programm");
                     MenuInfo = MainMenu();
                 }
                 if (MenuPosition == 1)
@@ -964,8 +964,11 @@ namespace Matrix_Calculator
                         MenuPosition -= 1;
                         ChoosenOne = 0;
                         break;
+                    case (ConsoleKey.Escape):
+                        ExitCode = true;
+                        break;
                 }
-            } while (true);
+            } while (!ExitCode);
         }
     }
 }
