@@ -878,10 +878,10 @@ namespace Matrix_Calculator
             {
                 Console.WriteLine("2*2 2*3      // <---- Input your size of matrix, between them must have ' '.");
                 Console.WriteLine("1 2");
-                Console.WriteLine("1 2      // <---- Input here your first matrix.");
+                Console.WriteLine("1 2      // <---- Input here your first matrix. One ' ' between two elements");
                 Console.WriteLine("-       //<---- Input here '-' to divide two matrix.");
                 Console.WriteLine("1 2 3");
-                Console.WriteLine("1 4 3    // <---- Input here your second matrix.");
+                Console.WriteLine("1 4 3    // <---- Input here your second matrix. One ' ' between two elements");
             }
             else
             {
@@ -889,7 +889,7 @@ namespace Matrix_Calculator
                 if (ChoosenOperation == 5)
                     Console.WriteLine("5   // <--- Input which number you want to multiply.");
                 Console.WriteLine("1 2 3");
-                Console.WriteLine("1 4 3    // <---- Input here your matrix.");
+                Console.WriteLine("1 4 3    // <---- Input here your matrix. One ' ' between two elements");
             }
             if (ChoosenMethodInput == 1)
                 Console.WriteLine("end           //<---- Input here end to end the input.");
