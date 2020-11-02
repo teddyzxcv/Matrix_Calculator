@@ -6,7 +6,6 @@ namespace Matrix_Calculator
 {
     class Program
     {
-
         static double ProductToMake = 0;
         static int ChoosenOne = 0;
         static short MenuPosition = 0;
@@ -20,7 +19,10 @@ namespace Matrix_Calculator
         static double[,] MatrixB = new double[1, 1];
         static string FilePath = "";
         static bool Error = false;
-
+        /// <summary>
+        /// Calculate the trace.
+        /// </summary>
+        /// <returns></returns>
         static double TraceM()
         {
             double Output = 0;
@@ -30,6 +32,10 @@ namespace Matrix_Calculator
             }
             return Output;
         }
+        /// <summary>
+        /// Calculate the tranpose matrix.
+        /// </summary>
+        /// <returns></returns>
         static double[,] TranposeM()
         {
             double[,] Output = new double[MatrixA.GetLength(1), MatrixA.GetLength(0)];
@@ -43,6 +49,10 @@ namespace Matrix_Calculator
             return Output;
 
         }
+        /// <summary>
+        /// Calculate the sum of two matrix
+        /// </summary>
+        /// <returns></returns>
         static double[,] Sum2M()
         {
             double[,] Output = new double[MatrixA.GetLength(0), MatrixA.GetLength(1)];
@@ -55,6 +65,10 @@ namespace Matrix_Calculator
             }
             return Output;
         }
+        /// <summary>
+        /// Calculatethe different of two matrix.
+        /// </summary>
+        /// <returns></returns>
         static double[,] Dif2M()
         {
             double[,] Output = new double[MatrixA.GetLength(0), MatrixA.GetLength(1)];
@@ -67,6 +81,10 @@ namespace Matrix_Calculator
             }
             return Output;
         }
+        /// <summary>
+        /// Calculate the product of two matrix.
+        /// </summary>
+        /// <returns></returns>
         static double[,] Pro2M()
         {
             double[,] Output = new double[MatrixA.GetLength(0), MatrixB.GetLength(1)];
@@ -85,6 +103,10 @@ namespace Matrix_Calculator
             return Output;
 
         }
+        /// <summary>
+        /// Calculate product of one matrix on number.
+        /// </summary>
+        /// <returns></returns>
         static double[,] Pro1N()
         {
             double[,] Output = new double[MatrixA.GetLength(0), MatrixA.GetLength(1)];
@@ -97,6 +119,11 @@ namespace Matrix_Calculator
             }
             return Output;
         }
+        /// <summary>
+        /// Find the invert number of permutation.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
         static int InvertN(int[] b)
         {
             int Invert = 0;
@@ -110,12 +137,20 @@ namespace Matrix_Calculator
             }
             return Invert;
         }
-        static void Permutation(int[] b, int size, int n, double[,] A)
+        /// <summary>
+        /// Find all permutaion and all determinant.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="size"></param>
+        /// <param name="n"></param>
+        /// <param name="A"></param>
+        static void PermutationAndDet(int[] b, int size, int n, double[,] A)
         {
             // if size becomes 1 then prints the obtained
             // permutation
             if (size == 1)
             {
+                // Get determinanat 
                 double ProEachPerm = 1;
                 for (int i = 0; i < A.GetLength(0); i++)
                 {
@@ -123,10 +158,9 @@ namespace Matrix_Calculator
                 }
                 Det -= Math.Pow(-1, InvertN(b)) * ProEachPerm;
             }
-
             for (int i = 0; i < size; i++)
             {
-                Permutation(b, size - 1, n, A);
+                PermutationAndDet(b, size - 1, n, A);
 
                 // if size is odd, swap 0th i.e (first) and
                 // (size-1)th i.e (last) element
@@ -147,24 +181,36 @@ namespace Matrix_Calculator
                 }
             }
         }
+        /// <summary>
+        /// Find determinant.
+        /// </summary>
+        /// <param name="A"></param>
+        /// <returns></returns>
         static double Deter(double[,] A)
         {
             Det = 0;
+            Console.WriteLine("Plz, wait...");
             int[] b1 = new int[A.GetLength(0)];
             for (int i = 0; i < A.GetLength(0); i++)
             {
                 b1[i] = i + 1;
             }
-            Permutation(b1, b1.Length, b1.Length, A);
+            PermutationAndDet(b1, b1.Length, b1.Length, A);
             if (b1.Length == 1)
                 Det *= -1;
             return Det;
         }
+        /// <summary>
+        /// Find solution for liner equation use Cramer rule.
+        /// </summary>
+        /// <returns></returns>
+
         static double[] CramerRule()
         {
             double[] OutPut = new double[MatrixA.GetLength(0)];
             double MainDet = Deter(MatrixA);
             if (MainDet == 0)
+                // if Delta == 0, liner equation have more than one solution.
                 throw new Exception();
             Console.WriteLine("Delta: " + MainDet);
             double[] SubDet = new double[MatrixA.GetLength(0)];
@@ -184,25 +230,29 @@ namespace Matrix_Calculator
                     }
 
                 }
+                // Find all delta[i].
                 SubDet[i] = Deter(SubMat);
                 Console.WriteLine($"Delta[{i + 1}]: " + SubDet[i]);
             }
 
             for (int i = 0; i < MatrixA.GetLength(0); i++)
             {
-
+                // Find Xi.
                 OutPut[i] = SubDet[i] / MainDet;
             }
 
 
             return (OutPut);
         }
-
+        /// <summary>
+        /// Do all the calculation.
+        /// </summary>
         static void CalculationM()
         {
             try
             {
                 if (!Error)
+                {
                     switch (ChoosenOperation)
                     {
                         case (0):
@@ -238,16 +288,19 @@ namespace Matrix_Calculator
                             Console.WriteLine("Solution is here!");
                             for (int i = 0; i < Solution.Length; i++)
                             {
-                                Console.Write($"X{i + 1} = {Solution[i]}, ");
+                                Console.WriteLine($"X{i + 1} = {Solution[i]} ");
                             }
                             Console.WriteLine();
                             PrintMatrix(MatrixA, 7);
                             break;
                     }
+                    Console.WriteLine("Plz, press enter to continue...");
+                    MenuPosition = 0;
+
+                }
                 else
                 {
-                    Console.WriteLine("Error! Plz try again!");
-                    MenuPosition = 0;
+                    throw new Exception();
                 }
             }
             catch
@@ -257,7 +310,12 @@ namespace Matrix_Calculator
             }
         }
 
-
+        /// <summary>
+        /// Add element to array.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="Addthing"></param>
+        /// <returns></returns>
         public static string[] AddElementToArray(string[] array, string Addthing)
         {
             /// Add element of array from the certain index.
@@ -266,6 +324,10 @@ namespace Matrix_Calculator
             lst.Add(Addthing);
             return lst.ToArray();
         }
+        /// <summary>
+        /// Main Menu input.
+        /// </summary>
+        /// <returns></returns>
         static List<string> MainMenu()
         {
             List<string> MainMenuInfo = new List<string>();
@@ -280,6 +342,10 @@ namespace Matrix_Calculator
             MainMenuInfo.Add("Find the solution of System of linear equations use Cramer's rule");
             return MainMenuInfo;
         }
+        /// <summary>
+        /// Method Input menu.
+        /// </summary>
+        /// <returns></returns>
         static List<string> MethodMenu()
         {
             List<string> MethodMenuInfo = new List<string>();
@@ -289,6 +355,10 @@ namespace Matrix_Calculator
             MethodMenuInfo.Add("Randomize");
             return MethodMenuInfo;
         }
+        /// <summary>
+        /// Let user choose input method.
+        /// </summary>
+        /// <param name="ChoosenMethodInput"></param>
         static void InputMethod(int ChoosenMethodInput)
         {
             try
@@ -296,12 +366,17 @@ namespace Matrix_Calculator
                 switch (ChoosenMethodInput)
                 {
                     case (0):
+                        Console.WriteLine(MainMenu()[ChoosenOperation]);
+                        PrintInstructionMatrix();
                         InputPath();
                         break;
                     case (1):
+                        Console.WriteLine(MainMenu()[ChoosenOperation]);
+                        PrintInstructionMatrix();
                         InputMatrix();
                         break;
                     case (2):
+                        Console.WriteLine(MainMenu()[ChoosenOperation]);
                         RandomMatrix();
                         break;
                     default:
@@ -312,12 +387,15 @@ namespace Matrix_Calculator
             }
             catch
             {
-                Console.WriteLine("Worng input, Plz try again! Press Enter to continue...");
+                Console.WriteLine("Wrong input, Plz try again! Press Enter to continue...");
                 Error = true;
                 MenuPosition = 0;
             }
         }
         // Size of matrix;
+        /// <summary>
+        /// File input method.
+        /// </summary>
         static void InputPath()
         {
 
@@ -341,19 +419,21 @@ namespace Matrix_Calculator
                 Error = true;
                 MenuPosition = 0;
             }
-
             MenuInfo = new List<string>();
         }
+        /// <summary>
+        /// Input from console.
+        /// </summary>
         static void InputMatrix()
         {
-            Console.WriteLine("Plz, input correct matrix(ces), type 'exit' to exit the input mode");
+            Console.WriteLine("Plz, input correct matrix(ces), type 'end' in the new line to end the input");
             string[] ConsoleInput = new string[1];
             string InputLine = "";
             ConsoleInput[0] = Console.ReadLine();
             do
             {
                 InputLine = Console.ReadLine();
-                if (InputLine == "exit")
+                if (InputLine == "end")
                     break;
                 ConsoleInput = AddElementToArray(ConsoleInput, InputLine);
             } while (true);
@@ -361,6 +441,10 @@ namespace Matrix_Calculator
             ReadMatrix(ConsoleInput);
             MenuInfo = new List<string>();
         }
+        /// <summary>
+        /// Read only one matrix.
+        /// </summary>
+        /// <param name="FileInput"></param>
         static void ReadOneMatrix(string[] FileInput)
         {
             int n = 0;
@@ -391,6 +475,10 @@ namespace Matrix_Calculator
             }
 
         }
+        /// <summary>
+        /// Read two matrix.
+        /// </summary>
+        /// <param name="FileInput"></param>
         static void ReadTwoMatrix(string[] FileInput)
         {
             int n1 = 0;
@@ -424,6 +512,7 @@ namespace Matrix_Calculator
                     throw new Exception();
                 }
             }
+            // Find "-" which differece the first and second matrix.
             if (DivPos != FileInput.Length - 1 - n2)
                 throw new Exception();
             for (int i = 1; i < DivPos; i++)
@@ -447,6 +536,10 @@ namespace Matrix_Calculator
                 }
             }
         }
+        /// <summary>
+        /// Read one matrix and number.
+        /// </summary>
+        /// <param name="FileInput"></param>
         static void ReadOneAndPrMatrix(string[] FileInput)
         {
             int n = 0;
@@ -472,20 +565,22 @@ namespace Matrix_Calculator
                 }
             }
         }
+        /// <summary>
+        /// Read matrix in all situation.
+        /// </summary>
+        /// <param name="Input"></param>
         static void ReadMatrix(string[] Input)
         {
             try
             {
                 if (ChoosenOperation == 1 || ChoosenOperation == 0 || ChoosenOperation == 6)
                 {
-                    Console.WriteLine("1m");
                     ReadOneMatrix(Input);
                     PrintMatrix(MatrixA, 1);
                     return;
                 }
                 else if (ChoosenOperation == 2 || ChoosenOperation == 3 || ChoosenOperation == 4)
                 {
-                    Console.WriteLine("2m");
                     ReadTwoMatrix(Input);
                     PrintMatrix(MatrixA, 1);
                     Console.WriteLine();
@@ -516,6 +611,9 @@ namespace Matrix_Calculator
                 MenuPosition = 0;
             }
         }
+        /// <summary>
+        /// Generate random matrix.
+        /// </summary>
         static void RandomMatrix()
         {
             string[] RandomInput = new string[1];
@@ -557,11 +655,11 @@ namespace Matrix_Calculator
                         RandomInput = AddElementToArray(RandomInput, rnd.Next(RandomRange[0], RandomRange[1]).ToString());
                         goto case (100);
                     case (6):
-                        Console.WriteLine("Plz, input correct size of matrix (n*n)");
+                        Console.WriteLine("Plz, input correct size of matrix (n*n) P.S but not more than 10*10");
                         RandomInput[0] = Console.ReadLine();
                         goto case (100);
                     case (7):
-                        Console.WriteLine("Plz, input correct size of matrix (n*n)");
+                        Console.WriteLine("Plz, input correct size of matrix (n*n) P.S but not more than 10*10");
                         RandomInput[0] = Console.ReadLine();
                         RandomInput[0] = RandomInput[0] + " " + $"1*{RandomInput[0].Split('*')[0]}";
                         goto case (200);
@@ -585,6 +683,12 @@ namespace Matrix_Calculator
 
             MenuInfo = new List<string>();
         }
+        /// <summary>
+        /// Generate one random matrix.
+        /// </summary>
+        /// <param name="RandomInput"></param>
+        /// <param name="RandomRange"></param>
+        /// <param name="rnd"></param>
         static void RandomOneMatrix(ref string[] RandomInput, int[] RandomRange, ref Random rnd)
         {
             int n = int.Parse(RandomInput[0].Split('*')[0]);
@@ -602,6 +706,12 @@ namespace Matrix_Calculator
                 RandomInput = AddElementToArray(RandomInput, Line);
             }
         }
+        /// <summary>
+        /// Generate two random matrix.
+        /// </summary>
+        /// <param name="RandomInput"></param>
+        /// <param name="RandomRange"></param>
+        /// <param name="rnd"></param>
         static void RandomTwoMatrix(ref string[] RandomInput, int[] RandomRange, ref Random rnd)
         {
             if (ChoosenOperation != 4 && ChoosenOperation != 7)
@@ -636,6 +746,10 @@ namespace Matrix_Calculator
                 RandomInput = AddElementToArray(RandomInput, Line);
             }
         }
+        /// <summary>
+        /// Check input.
+        /// </summary>
+        /// <returns></returns>
         static bool CheckMatrix()
         {
             try
@@ -663,11 +777,11 @@ namespace Matrix_Calculator
                     case (5):
                         break;
                     case (6):
-                        if (MatrixA.GetLength(0) != MatrixA.GetLength(1))
+                        if (MatrixA.GetLength(0) != MatrixA.GetLength(1) || (MatrixA.GetLength(0) == MatrixA.GetLength(1) && MatrixA.GetLength(0) > 10))
                             throw new Exception();
                         break;
                     case (7):
-                        if (MatrixA.GetLength(0) != MatrixA.GetLength(1) || MatrixB.GetLength(0) != 1 || MatrixB.GetLength(1) != MatrixA.GetLength(0))
+                        if ((MatrixA.GetLength(0) == MatrixA.GetLength(1) && MatrixA.GetLength(0) > 10) || MatrixA.GetLength(0) != MatrixA.GetLength(1) || MatrixB.GetLength(0) != 1 || MatrixB.GetLength(1) != MatrixA.GetLength(0))
                             throw new Exception();
                         break;
                 }
@@ -678,6 +792,11 @@ namespace Matrix_Calculator
                 return false;
             }
         }
+        /// <summary>
+        /// Menu position correction.
+        /// </summary>
+        /// <param name="Position"></param>
+        /// <returns></returns>
         static short PositionClear(short Position)
         {
             if (Position < 0)
@@ -686,6 +805,11 @@ namespace Matrix_Calculator
                 return 2;
             return Position;
         }
+        /// <summary>
+        /// Print Matrix.
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="Id"></param>
         static void PrintMatrix(double[,] A, int Id)
         {
             if (Id == 1)
@@ -717,6 +841,11 @@ namespace Matrix_Calculator
                 }
             }
         }
+        /// <summary>
+        /// Use to generate the graphic menu.
+        /// </summary>
+        /// <param name="InputList"></param>
+        /// <param name="ChoosenOne"></param>
         public static void PrintOutUpAndDown(List<string> InputList, int ChoosenOne)
         {
             // The loop that goes through all of the menu items.
@@ -737,29 +866,69 @@ namespace Matrix_Calculator
                 }
             }
         }
+        public static void PrintInstructionMatrix()
+        {
+            Console.WriteLine("This is how you must input matrix:");
+            if (ChoosenMethodInput == 0)
+                Console.WriteLine("Write your file in .txt like this: (in the end of line must without the whitespace)");
+            else if (ChoosenMethodInput == 1)
+                Console.WriteLine("Input on console like this (press enter after completed line, in the end of line must without whitespace)");
+            Console.WriteLine("Example:");
+            if (ChoosenOperation == 2 || ChoosenOperation == 3 || ChoosenOperation == 4)
+            {
+                Console.WriteLine("2*2 2*3      // <---- Input your size of matrix, between them must have ' '.");
+                Console.WriteLine("1 2");
+                Console.WriteLine("1 2      // <---- Input here your first matrix.");
+                Console.WriteLine("-       //<---- Input here '-' to divide two matrix.");
+                Console.WriteLine("1 2 3");
+                Console.WriteLine("1 4 3    // <---- Input here your second matrix.");
+            }
+            else
+            {
+                Console.WriteLine("2*3     // <---- Input your size of matrix.");
+                if (ChoosenOperation == 5)
+                    Console.WriteLine("5   // <--- Input which number you want to multiply.");
+                Console.WriteLine("1 2 3");
+                Console.WriteLine("1 4 3    // <---- Input here your matrix.");
+            }
+            if (ChoosenMethodInput == 1)
+                Console.WriteLine("end           //<---- Input here end to end the input.");
+        }
+        /// <summary>
+        /// Main method.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
+
             do
             {
+                // Check the menu position.
                 Error = false;
                 MenuPosition = PositionClear(MenuPosition);
                 Console.Clear();
                 if (MenuPosition == 0)
                 {
+                    // Main menu.
                     Console.WriteLine("Main Menu");
                     MenuInfo = MainMenu();
                 }
                 if (MenuPosition == 1)
                 {
+                    // Choose method menu.
                     Console.WriteLine(MenuName);
                     MenuInfo = MethodMenu();
                 }
                 if (MenuPosition == 2)
                 {
+                    // Input menu.
                     InputMethod(ChoosenMethodInput);
+                    // And calculation.
                     CalculationM();
                 }
+                // Print the current menu.
                 PrintOutUpAndDown(MenuInfo, ChoosenOne);
+                // Read the nect choise of user.
                 ConsoleKeyInfo key = Console.ReadKey(true);
                 // Simple switch, if uparrow then decrease, downarrow then increase.
                 switch (key.Key)
